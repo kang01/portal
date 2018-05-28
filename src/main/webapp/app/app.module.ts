@@ -18,6 +18,7 @@ import { GwBbisStrangerPortalAccountModule } from './account/account.module';
 import { GwBbisStrangerPortalEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
+
 import {
     JhiMainComponent,
     NavbarComponent,
@@ -27,6 +28,7 @@ import {
     ActiveMenuDirective,
     ErrorComponent
 } from './layouts';
+import { GwBbisStrangerPortalBizsModule } from './bizs/bizs.module';
 
 @NgModule({
     imports: [
@@ -38,6 +40,7 @@ import {
         GwBbisStrangerPortalAdminModule,
         GwBbisStrangerPortalAccountModule,
         GwBbisStrangerPortalEntityModule,
+        GwBbisStrangerPortalBizsModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

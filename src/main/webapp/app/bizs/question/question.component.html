@@ -1,0 +1,38 @@
+<div class="panel panel-default mb-0">
+    <div class=" navigation panel-body p-0">
+        <div class='breadcrumbs'>
+            <div class='inner'>
+                <ul>
+                    <li *ngFor="let item of navigationList;let i = index">
+                        <a [ngClass]="item.className" (click)="switchTitleHandler(item)">
+                            <h6 class="text-left pr-10" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">Step {{item.id}}</h6>
+                            <h6 class="text-left pr-10 mb-0" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">{{item.name}}</h6>
+                        </a>
+                    </li>
+                    <div class="clear-both"></div>
+                </ul>
+            </div>
+        </div>
+        <div class="navigation-content">
+            <router-outlet></router-outlet>
+            <!-- <jhi-question-detail></jhi-question-detail> -->
+        </div>
+
+    </div>
+    <div class="panel-footer">
+        <div class="text-right">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-secondary" (click)="preStep()">上一步</button>
+                <button type="button" class="btn btn-secondary" (click)="nextStep()">下一步</button>
+            </div>
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-info" ng-click="vm.finish()">完成</button>
+                <button type="button" class="btn btn-danger" ng-click="vm.cancel()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<block-ui message="loading……">
+    <!-- Markup here -->
+</block-ui>

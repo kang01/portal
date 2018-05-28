@@ -170,3 +170,45 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
+
+npm install jquery --save
+npm install datatables.net --save
+npm install datatables.net-dt --save
+npm install angular-datatables --save
+npm install @types/jquery --save-dev
+npm install @types/datatables.net --save-dev
+
+npm install ng-block-ui --save
+
+import { BlockUIModule } from 'ng-block-ui';
+BlockUIModule.forRoot()
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+export class AppComponent {
+// Decorator wires up blockUI instance
+@BlockUI() blockUI: NgBlockUI;
+
+constructor() {
+    this.blockUI.start('Loading...'); // Start blocking
+    setTimeout(() => {
+        this.blockUI.stop(); // Stop blocking
+    }, 2000);
+}
+<block-ui>
+</block-ui>
+
+npm i --save ng-selectize selectize
+import {NgSelectizeModule} from 'ng-selectize';
+imports: [..., NgSelectizeModule, ...],
+<ng-selectize [config]="..." [options] = "..." {other-attributes}></ng-selectize>
+
+
+npm install ngx-toastr --save
+npm install @angular/animations --save
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+ToastrModule.forRoot({
+    timeOut: 10000,
+    positionClass: 'toast-bottom-right',
+    preventDuplicates: true,
+  }),

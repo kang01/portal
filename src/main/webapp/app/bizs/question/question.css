@@ -1,0 +1,109 @@
+.pl-10 {
+    padding-left: 10px;
+}
+
+.pl-15 {
+    padding-left: 15px;
+}
+
+.pl-30 {
+    padding-left: 30px;
+}
+
+.pr-10 {
+    padding-right: 10px;
+}
+
+.pr-15 {
+    padding-right: 15px;
+}
+
+.pr-30 {
+    padding-right: 30px;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.navigation .inner {
+    max-width: 820px;
+}
+
+.navigation .breadcrumbs {
+    border-bottom: 1px solid #ddd;
+    background-color: #f5f5f5;
+    border-radius: 4px 4px 0 0;
+    font-weight: bold;
+}
+
+.navigation .breadcrumbs ul {
+    margin: 0;
+    padding-left: 0;
+    border-left: 1px solid #ddd;
+}
+
+.navigation .breadcrumbs li {
+    float: left;
+    list-style: none;
+}
+
+.navigation .breadcrumbs a {
+    position: relative;
+    display: block;
+    padding: 1px;
+    text-align: center;
+    color: #ccc;
+}
+
+.navigation .breadcrumbs a h5 {
+    font-weight: bold;
+    margin: 6px 0;
+}
+
+.navigation .breadcrumbs a.finish {
+    color: #fff;
+    background-color: #5CB85C;
+}
+
+.navigation .breadcrumbs a.finish:after {
+    border-left-color: #5CB85C;
+}
+
+.navigation .breadcrumbs a.active {
+    color: #fff;
+    background-color: #5BC0DE;
+}
+
+.navigation .breadcrumbs a.active:after {
+    border-left-color: #5BC0DE;
+}
+
+.navigation .breadcrumbs a:before,
+.navigation .breadcrumbs a:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1;
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 15px solid transparent;
+}
+
+.navigation .breadcrumbs a:before {
+    margin-left: 1px;
+    border-left-color: #d5d5d5;
+}
+
+.navigation .breadcrumbs a:after {
+    border-left-color: #f5f5f5;
+}
+
+.navigation .navigation-content {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
