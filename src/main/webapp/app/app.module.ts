@@ -40,7 +40,7 @@ import { GwBbisStrangerPortalBizsModule } from './bizs/bizs.module';
         GwBbisStrangerPortalAdminModule,
         GwBbisStrangerPortalAccountModule,
         GwBbisStrangerPortalEntityModule,
-        GwBbisStrangerPortalBizsModule
+        GwBbisStrangerPortalBizsModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

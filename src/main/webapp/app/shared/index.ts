@@ -1,3 +1,5 @@
+export * from './broadcaster/broadcaster.component';
+export * from './broadcaster/message.event.component';
 export * from './constants/error.constants';
 export * from './constants/pagination.constants';
 export * from './alert/alert.component';

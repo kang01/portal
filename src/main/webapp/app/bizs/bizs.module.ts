@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -5,20 +6,26 @@ import { DataTablesModule } from 'angular-datatables';
 import { QuestionComponent } from './question/question.component';
 import { BizState } from './bizs.routing';
 import { NgSelectizeModule} from 'ng-selectize';
+import { BlockUIModule } from 'ng-block-ui';
+import { ToastrModule } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import {
     QuestionAccreditComponent,
     QuestionDetailComponent,
-    QuestionAnswerComponent,
+    QuestionHistoryComponent,
     QuestionDetailModalComponent
 } from './';
-import { BlockUIModule } from 'ng-block-ui';
-import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
     imports: [
+        BrowserAnimationsModule,
         DataTablesModule,
         RouterModule.forChild(BizState),
         CommonModule,
         NgSelectizeModule,
+        FormsModule,
+        NgbAccordionModule,
         BlockUIModule.forRoot({
             message: 'loading……'
         }),
@@ -35,7 +42,7 @@ import { ToastrModule } from 'ngx-toastr';
         QuestionComponent,
         QuestionAccreditComponent,
         QuestionDetailComponent,
-        QuestionAnswerComponent,
+        QuestionHistoryComponent,
         QuestionDetailModalComponent
     ],
     entryComponents: [

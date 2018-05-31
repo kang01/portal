@@ -1,78 +1,149 @@
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-12 text-right">
         <button class="btn btn-primary" (click)="showModal()">modal</button>
         <button class="btn btn-success" (click)="showSuccess()">Toastr Success</button>
         <button class="btn btn-primary" (click)="showBlockUI()">BlockUI</button>
     </div>
+</div> -->
+<div class="pl-10 mt-10">
+    <p>
+        提问人：钟慧； 提问日期：2018-01-11； 问题类型：可疑样本确认； 相关项目：0029； 相关单位：高危项目组；
+    </p>
+    <p>
+        问题概述：在入库时发现5只血浆样本颜色发黄
+    </p>
+    <p>
+        问题详情：2018-01-05从1501内蒙古和林县疾控中心，接收的100盒样本中，发现5只血浆样本颜色泛黄，疑似是尿液样本。请问如何处理？
+    </p>
+    <h4>相关样本</h4>
 </div>
-<table datatable class="row-border hover" id="example">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>First name</th>
-            <th>Last name</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>Foo</td>
-            <td>Bar</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Someone</td>
-            <td>Youknow</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Iamout</td>
-            <td>Ofinspiration</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Yoda</td>
-            <td>Skywalker</td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <td>Patrick</td>
-            <td>Dupont</td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <td>Barack</td>
-            <td>Obama</td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <td>François</td>
-            <td>Holland</td>
-        </tr>
-        <tr>
-            <td>8</td>
-            <td>Michel</td>
-            <td>Popo</td>
-        </tr>
-        <tr>
-            <td>9</td>
-            <td>Chuck</td>
-            <td>Norris</td>
-        </tr>
-        <tr>
-            <td>10</td>
-            <td>Simon</td>
-            <td>Robin</td>
-        </tr>
-        <tr>
-            <td>11</td>
-            <td>Louis</td>
-            <td>Lin</td>
-        </tr>
-        <tr>
-            <td>12</td>
-            <td>Zelda</td>
-            <td>Link</td>
-        </tr>
-    </tbody>
-</table>
+
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel>
+        <ng-template ngbPanelTitle class="p-0">
+            <span>Q001. 样本颜色程黄色，疑似尿液，怎么处理？</span>
+            <button class="btn btn-sm btn-default pull-right" (click)="showModal()">回复</button>
+        </ng-template>
+        <ng-template ngbPanelContent>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>样本编码</th>
+                        <th>样本类型</th>
+                        <th>项目</th>
+                        <th>PID</th>
+                        <th>冻存盒</th>
+                        <th>孔位</th>
+                        <th>处理方式</th>
+                        <th>回复</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#" (click)="showModal()">回答</a></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#" (click)="showModal()">回答</a></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#" (click)="showModal()">回答</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </ng-template>
+    </ngb-panel>
+    <ngb-panel>
+        <ng-template ngbPanelTitle>
+            <!-- <span>&#9733; <b>Fancy</b> title &#9733;</span> -->
+            <span>Q002. 样本颜色程黄色，疑似尿液，怎么处理？</span>
+            <button class="btn btn-sm btn-default pull-right" (click)="showModal()">回复</button>
+        </ng-template>
+        <ng-template ngbPanelContent>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>样本编码</th>
+                        <th>样本类型</th>
+                        <th>项目</th>
+                        <th>PID</th>
+                        <th>冻存盒</th>
+                        <th>孔位</th>
+                        <th>处理方式</th>
+                        <th>回复</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#">回答</a></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#">回答</a></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1234567890</td>
+                        <td>血浆</td>
+                        <td>0029</td>
+                        <td>1234567890</td>
+                        <td>1234567890</td>
+                        <td>D10</td>
+                        <td>销毁样本</td>
+                        <td></td>
+                        <td><a href="#">回答</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>

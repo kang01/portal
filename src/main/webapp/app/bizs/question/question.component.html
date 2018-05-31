@@ -1,5 +1,5 @@
-<div class="panel panel-default mb-0">
-    <div class=" navigation panel-body p-0">
+<div class="card mb-0">
+    <div class=" navigation card-body p-0">
         <div class='breadcrumbs'>
             <div class='inner'>
                 <ul>
@@ -14,12 +14,15 @@
             </div>
         </div>
         <div class="navigation-content">
-            <router-outlet></router-outlet>
+            <!-- <router-outlet></router-outlet> -->
             <!-- <jhi-question-detail></jhi-question-detail> -->
+            <jhi-question-accredit #child1 *ngIf="selectedIndex == 1"></jhi-question-accredit>
+            <jhi-question-detail #child2 *ngIf="selectedIndex == 2"></jhi-question-detail>
+            <jhi-question-history #child3 *ngIf="selectedIndex == 3"></jhi-question-history>
         </div>
 
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <div class="text-right">
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" class="btn btn-secondary" (click)="preStep()">上一步</button>
