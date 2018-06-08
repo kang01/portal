@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { QuestionHistoryDescModalComponent } from './question-history-desc-modal.component';
 
 @Component({
   selector: 'jhi-question-history.',
@@ -17,9 +19,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QuestionHistoryComponent implements OnInit {
 
-  constructor() { }
+  constructor( private modalService: NgbModal ) { }
 
   ngOnInit() {
+  }
+  showDesc() {
+    this.modalService.open(QuestionHistoryDescModalComponent, {backdrop: 'static', size: 'lg' });
   }
 
 }

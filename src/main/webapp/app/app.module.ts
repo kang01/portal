@@ -18,17 +18,17 @@ import { GwBbisStrangerPortalAccountModule } from './account/account.module';
 import { GwBbisStrangerPortalEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
-
+import { GwBbisStrangerPortalBizsModule } from './bizs/bizs.module';
 import {
     JhiMainComponent,
     NavbarComponent,
+    NavbarTopComponent,
     FooterComponent,
     ProfileService,
     PageRibbonComponent,
     ActiveMenuDirective,
     ErrorComponent
 } from './layouts';
-import { GwBbisStrangerPortalBizsModule } from './bizs/bizs.module';
 
 @NgModule({
     imports: [
@@ -46,6 +46,7 @@ import { GwBbisStrangerPortalBizsModule } from './bizs/bizs.module';
     declarations: [
         JhiMainComponent,
         NavbarComponent,
+        NavbarTopComponent,
         ErrorComponent,
         PageRibbonComponent,
         ActiveMenuDirective,

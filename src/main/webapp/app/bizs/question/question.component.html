@@ -5,8 +5,8 @@
                 <ul>
                     <li *ngFor="let item of navigationList;let i = index">
                         <a [ngClass]="item.className" (click)="switchTitleHandler(item)">
-                            <h6 class="text-left pr-10" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">Step {{item.id}}</h6>
-                            <h6 class="text-left pr-10 mb-0" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">{{item.name}}</h6>
+                            <h5 class="text-left pr-10" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">Step {{item.id}}</h5>
+                            <h5 class="text-left pr-10" [ngClass]="{' pl-15': i == 0, 'pl-30': i != 0}">{{item.name}}</h5>
                         </a>
                     </li>
                     <div class="clear-both"></div>

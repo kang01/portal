@@ -24,24 +24,19 @@ export class QuestionDetailModalComponent implements OnInit {
     ngOnInit() {
         this.currentOptions = [
             {
-                label: 'Angular',
-                value: 'angular',
+                label: '销毁样本',
+                value: '001',
                 code: 'NG'
             },
             {
-                label: 'ReactJS',
-                value: 'reactjs',
+                label: '样本正常',
+                value: '0002',
                 code: 'RJS'
             },
             {
-                label: 'Ember JS',
-                value: 'emberjs',
+                label: '延迟处理',
+                value: '0003',
                 code: 'emjs'
-            },
-            {
-                label: 'Ruby on Rails',
-                value: 'ruby_on_rails',
-                code: 'ROR'
             }
         ];
     }

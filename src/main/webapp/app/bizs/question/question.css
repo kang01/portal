@@ -59,6 +59,7 @@
 .navigation .breadcrumbs a h5 {
     font-weight: bold;
     margin: 6px 0;
+    font-size: 14px;
 }
 
 .navigation .breadcrumbs a.finish {

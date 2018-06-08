@@ -14,7 +14,8 @@ import {
     QuestionAccreditComponent,
     QuestionDetailComponent,
     QuestionHistoryComponent,
-    QuestionDetailModalComponent
+    QuestionDetailModalComponent,
+    QuestionHistoryDescModalComponent
 } from './';
 
 @NgModule({
@@ -43,10 +44,12 @@ import {
         QuestionAccreditComponent,
         QuestionDetailComponent,
         QuestionHistoryComponent,
-        QuestionDetailModalComponent
+        QuestionDetailModalComponent,
+        QuestionHistoryDescModalComponent
     ],
     entryComponents: [
-        QuestionDetailModalComponent
+        QuestionDetailModalComponent,
+        QuestionHistoryDescModalComponent
     ],
 })
 export class  GwBbisStrangerPortalBizsModule { }

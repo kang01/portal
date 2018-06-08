@@ -40,6 +40,7 @@ export class QuestionComponent implements OnInit {
             // console.log('页面变化了', window.innerHeight);
             s['style'].height = (window.innerHeight - 270) + 'px';
         });
+
         this.activatedRoute.queryParams.subscribe((data) => {
             console.log(data);
             this.selectedIndex = Number(data.id);
