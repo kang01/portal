@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { QuestionReply } from '../../questionReply.model';
+import { CommonService } from '../../../service/common.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'jhi-question-detail-modal',
@@ -7,9 +11,13 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     styles: []
 })
 export class QuestionDetailModalComponent implements OnInit {
-    value1: string[] = [];
-    currentOptions: any;
-    currentOptionsConfig = {
+    // @Input() questionDetailItemIdArray;
+    @Input() questionDescription;
+    questionReply: QuestionReply;
+    handleTypeCode;
+    replyContent;
+    processOptions: any;
+    processOptionsConfig = {
         dropdownDirection: 'auto',
         labelField: 'label',
         valueField: 'value',
@@ -17,27 +25,22 @@ export class QuestionDetailModalComponent implements OnInit {
         maxItems: 1,
         plugins: ['remove_button']
     };
-
-    constructor(public activeModal: NgbActiveModal) {
+    constructor(public activeModal: NgbActiveModal, private commonService: CommonService, private toastr: ToastrService) {
     }
 
     ngOnInit() {
-        this.currentOptions = [
-            {
-                label: '销毁样本',
-                value: '001',
-                code: 'NG'
-            },
-            {
-                label: '样本正常',
-                value: '0002',
-                code: 'RJS'
-            },
-            {
-                label: '延迟处理',
-                value: '0003',
-                code: 'emjs'
-            }
-        ];
+        this.processOptions = this.commonService.processOptions;
+    }
+    ok() {
+        if (!this.handleTypeCode || !this.replyContent) {
+            this.toastr.error('请填写必填项！', '提示');
+            return;
+        }
+        console.log(this.handleTypeCode);
+        console.log(this.replyContent);
+        const obj = {handleTypeCode: String, replyContent: String};
+        obj.handleTypeCode = this.handleTypeCode;
+        obj.replyContent = this.replyContent;
+        this.activeModal.close(obj);
     }
 }

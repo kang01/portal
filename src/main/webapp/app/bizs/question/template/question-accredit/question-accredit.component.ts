@@ -12,9 +12,6 @@ import { ToastrService } from 'ngx-toastr';
     `]
 })
 export class QuestionAccreditComponent implements OnInit {
-    @Input() parent_msg: string;
-    message: string;
-    childID: boolean;
     questionNo: string;
     questionAccreditNo: string;
     constructor(
@@ -27,7 +24,7 @@ export class QuestionAccreditComponent implements OnInit {
         // this.registerTypeBroadcast();
     }
     verification() {
-        if (!this.questionNo && !this.questionAccreditNo) {
+        if (!this.questionNo || !this.questionAccreditNo) {
             this.toastr.error('请填写必填项！', '提示');
             return true;
         }else {

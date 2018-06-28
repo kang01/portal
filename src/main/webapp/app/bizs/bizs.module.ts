@@ -8,14 +8,16 @@ import { BizState } from './bizs.routing';
 import { NgSelectizeModule} from 'ng-selectize';
 import { BlockUIModule } from 'ng-block-ui';
 import { ToastrModule } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
+import { FormsModule  } from '@angular/forms';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import {
     QuestionAccreditComponent,
     QuestionDetailComponent,
     QuestionHistoryComponent,
     QuestionDetailModalComponent,
-    QuestionHistoryDescModalComponent
+    QuestionHistoryDescModalComponent,
+    QuestionService,
+    CommonService
 } from './';
 
 @NgModule({
@@ -51,5 +53,9 @@ import {
         QuestionDetailModalComponent,
         QuestionHistoryDescModalComponent
     ],
+    providers: [
+        QuestionService,
+        CommonService
+    ]
 })
 export class  GwBbisStrangerPortalBizsModule { }
