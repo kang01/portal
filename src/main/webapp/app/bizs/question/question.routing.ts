@@ -10,7 +10,7 @@ export const QuestionRoute: Route = {
     component: QuestionComponent,
     children: [
         {path: 'question-accredit/:id', component: QuestionAccreditComponent},
-        {path: 'question-detail/:id', component: QuestionDetailComponent},
+        {path: 'question-accredit/question-detail/:id', component: QuestionDetailComponent},
         {path: 'question-history/:id', component: QuestionHistoryComponent},
         { path: '', redirectTo: '/question-management/question-accredit?id=1', pathMatch: 'full' },
         { path: '**', component: QuestionAccreditComponent }

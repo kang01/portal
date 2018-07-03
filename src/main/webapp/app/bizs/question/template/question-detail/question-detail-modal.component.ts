@@ -36,8 +36,6 @@ export class QuestionDetailModalComponent implements OnInit {
             this.toastr.error('请填写必填项！', '提示');
             return;
         }
-        console.log(this.handleTypeCode);
-        console.log(this.replyContent);
         const obj = {handleTypeCode: String, replyContent: String};
         obj.handleTypeCode = this.handleTypeCode;
         obj.replyContent = this.replyContent;

@@ -11,3 +11,4 @@ export * from './question/question.service';
 export * from './question/questionDetail.model';
 export * from './question/questionReply.model';
 export * from './service/common.service';
+export * from './prompt-modal/prompt-modal.component';

@@ -14,5 +14,8 @@ export class QuestionService {
   }
   replyQuestion(recordId: string, replyItem): Observable<HttpResponse<any>> {
     return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId, replyItem, { observe: 'response' });
-}
+  }
+  finishReplyQuestion(recordId: string): Observable<any> {
+    return this.http.put(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId + '/completed/', { observe: 'response' });
+  }
 }

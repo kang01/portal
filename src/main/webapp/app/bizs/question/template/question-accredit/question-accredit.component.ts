@@ -31,18 +31,4 @@ export class QuestionAccreditComponent implements OnInit {
             return false;
         }
     }
-    // registerTypeBroadcast() {
-    //     this.broadcaster.on<string>('MyEvent')
-    //     .subscribe((message) => {
-    //         this.message = message;
-    //         console.log(this.message + '11111111111111111111111');
-    //         if (!this.questionNo && !this.questionAccreditNo) {
-    //             this.childID = true;
-    //         }else {
-    //             this.childID = false;
-    //         }
-    //         this.messageEvent.fire(`${this.childID}`);
-    //     });
-
-    // }
 }

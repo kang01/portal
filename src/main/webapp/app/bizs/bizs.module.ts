@@ -17,7 +17,8 @@ import {
     QuestionDetailModalComponent,
     QuestionHistoryDescModalComponent,
     QuestionService,
-    CommonService
+    CommonService,
+    PromptModalComponent
 } from './';
 
 @NgModule({
@@ -47,11 +48,13 @@ import {
         QuestionDetailComponent,
         QuestionHistoryComponent,
         QuestionDetailModalComponent,
-        QuestionHistoryDescModalComponent
+        QuestionHistoryDescModalComponent,
+        PromptModalComponent
     ],
     entryComponents: [
         QuestionDetailModalComponent,
-        QuestionHistoryDescModalComponent
+        QuestionHistoryDescModalComponent,
+        PromptModalComponent
     ],
     providers: [
         QuestionService,

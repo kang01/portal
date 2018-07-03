@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="navigation-content">
-            <!-- <router-outlet></router-outlet> -->
+            <!-- <router-outlet [message]="msgToChild"></router-outlet> -->
             <!-- <jhi-question-detail></jhi-question-detail> -->
             <jhi-question-accredit #child1 *ngIf="selectedIndex == 1"></jhi-question-accredit>
             <jhi-question-detail #child2 *ngIf="selectedIndex == 2"></jhi-question-detail>
@@ -26,11 +26,11 @@
         <div class="text-right">
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" class="btn btn-secondary" (click)="preStep()">上一步</button>
-                <button type="button" class="btn btn-secondary" (click)="nextStep()">下一步</button>
+                <button type="button" class="btn btn-secondary" (click)="nextStep()" *ngIf="selectedIndex == 1">下一步</button>
             </div>
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-info" ng-click="vm.finish()">完成</button>
-                <button type="button" class="btn btn-danger" ng-click="vm.cancel()">取消</button>
+                <button type="button" class="btn btn-info" *ngIf="selectedIndex == 2" (click)="finish()">完成</button>
+                <!-- <button type="button" class="btn btn-danger" *ngIf="selectedIndex == 2" (click)="cancel()">取消</button> -->
             </div>
         </div>
     </div>

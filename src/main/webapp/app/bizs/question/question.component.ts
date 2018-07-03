@@ -14,17 +14,15 @@ import { PARAMETERS } from '@angular/core/src/util/decorators';
 ]
 })
 export class QuestionComponent implements OnInit {
-    message: string;
     verificationFlag: boolean;
     selectedIndex: number;
     navigationList: any[] = [
         {id: 1, name: '授权', className: 'active', routerName: 'question-accredit'},
-        {id: 2, name: '问题详情', className: '', routerName: 'question-detail'},
-        {id: 3, name: '历史', className: '', routerName: 'question-history'}
+        {id: 2, name: '问题详情', className: '', routerName: 'question-accredit/question-detail'}
     ];
-    @ViewChild(QuestionDetailComponent) QuestionDetailComponent;
-    @ViewChild('child1')
-    child1: QuestionAccreditComponent;
+    // 父组件中使用@ViewChild拿到子组件的变量和方法
+    @ViewChild('child2') public child2: QuestionDetailComponent;
+    @ViewChild('child1') public child1: QuestionAccreditComponent;
 
     constructor(
         private router: Router,
@@ -118,5 +116,11 @@ export class QuestionComponent implements OnInit {
             this.selectedIndex -= 1;
         }
         this.changeTitle();
+    }
+    finish() {
+        this.child2.finish();
+    }
+    cancel() {
+
     }
 }
