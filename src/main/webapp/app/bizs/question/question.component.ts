@@ -18,7 +18,7 @@ export class QuestionComponent implements OnInit {
     selectedIndex: number;
     navigationList: any[] = [
         {id: 1, name: '授权', className: 'active', routerName: 'question-accredit'},
-        {id: 2, name: '问题详情', className: '', routerName: 'question-accredit/question-detail'}
+        {id: 2, name: '问题详情', className: '', routerName: 'question-detail'}
     ];
     // 父组件中使用@ViewChild拿到子组件的变量和方法
     @ViewChild('child2') public child2: QuestionDetailComponent;

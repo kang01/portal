@@ -5,6 +5,7 @@ export class QuestionDetail {
     public occurDate?: Date;
     public projectCode?: string;
     public relatedAgency?: string;
+    public expirationTime?: string;
     public status?: string;
     public questionSummary?: string;
     public questionDescription?: string;
@@ -17,6 +18,7 @@ export class QuestionDetail {
         occurDate?: Date,
         projectCode?: string,
         relatedAgency?: string,
+        expirationTime?: string,
         status?: string,
         questionSummary?: string,
         questionDescription?: string,
@@ -28,6 +30,7 @@ export class QuestionDetail {
         this.occurDate = occurDate ? occurDate : null;
         this.projectCode = projectCode ? projectCode : null;
         this.relatedAgency = relatedAgency ? relatedAgency : null;
+        this.expirationTime = expirationTime ? expirationTime : null;
         this.status = status ? status : null;
         this.questionSummary = questionSummary ? questionSummary : null;
         this.questionDescription = questionDescription ? questionDescription : null;

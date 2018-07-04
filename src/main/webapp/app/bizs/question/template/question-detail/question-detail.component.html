@@ -8,18 +8,24 @@
     <p>
         问题详情：{{questionDetail.questionDescription}}
     </p>
-    <div style="position: absolute;top:0;right: 20px;">
+    <div style="position: absolute;top:0;right: 20px;" *ngIf="questionDetail.status === '2401'">
         <span>{{usedTime}}后过期</span>
-        <button class="btn btn-sm btn-secondary ">申请加时</button>
+        <button class="btn btn-sm btn-secondary " (click)="increaseTime()">申请加时</button>
     </div>
-
+    <form *ngIf="questionDetail.questionTypeCode == '2302'">
+        <hr>
+        <div class="form-group">
+            <label>问题回复</label>
+            <textarea class="form-control" rows="6" style="resize: none;" [(ngModel)]="questionDetail.questionDescription" name="questionDescription" required></textarea>
+        </div>
+    </form>
 </div>
 
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-    <ngb-panel *ngFor="let item of questionDetail.questionItemDTOList">
+    <ngb-panel *ngFor="let item of questionDetail.questionItemDTOList" id="ngb-panel-0">
         <ng-template ngbPanelTitle class="p-0">
             <span>{{item.questionDescription}}</span>
-            <button class="btn btn-sm btn-light pull-right" *ngIf="item.status === '2401'" (click)="replyQuestionModal($event,item)">回复</button>
+            <button class="btn btn-sm btn-light pull-right" *ngIf="questionDetail.status === '2401'" (click)="replyQuestionModal($event,item)">回复</button>
         </ng-template>
         <ng-template ngbPanelContent>
             <table class="table">
@@ -52,7 +58,7 @@
                             white-space:nowrap">{{item1.replyContent}}</div>
                         </td>
                         <!-- // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期 -->
-                        <td><button class="btn btn-sm btn-light" *ngIf="item.status === '2401'" (click)="replySingleQuestionModal(item,item1)">回复</button></td>
+                        <td><button class="btn btn-sm btn-light" *ngIf="questionDetail.status === '2401'" (click)="replySingleQuestionModal(item,item1)">回复</button></td>
                     </tr>
 
                 </tbody>

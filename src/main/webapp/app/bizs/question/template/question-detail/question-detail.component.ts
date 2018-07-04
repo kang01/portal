@@ -19,6 +19,7 @@ export class QuestionDetailComponent implements OnInit {
     selected = {};
     selectAll = {};
     usedTime: string;
+    expirationTimer: any;
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -29,9 +30,11 @@ export class QuestionDetailComponent implements OnInit {
 
     ngOnInit() {
         this.queryQuestionDesc();
-        this.calcTime(1530813600000);
-        setInterval(() => {
-            this.calcTime(1530813600000);
+    }
+    initExpirationTime(expirationTime) {
+        this.calcTime(new Date(expirationTime).getTime());
+        this.expirationTimer = setInterval(() => {
+            this.calcTime(new Date(expirationTime).getTime());
         }, 6000);
     }
     calcTime(usedTime) {
@@ -50,17 +53,29 @@ export class QuestionDetailComponent implements OnInit {
         }
     }
     queryQuestionDesc() {
-        this.questionService.queryQuestionDesc('54').subscribe((data) => {
-            this.questionDetail = data;
-            this.questionDetail.questionItemDTOList.forEach( (item) => {
-                this.selected[item.id] = {};
-                this.selectAll[item.id] = false;
-                item.questionItemDetailsDTOS.forEach((item1) => {
-                    this.selected[item.id][item1.id] = false;
-                    item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
+        const storageQuestion = this.storage.retrieve('questionDetail');
+        console.log(storageQuestion);
+        if (!storageQuestion) {
+            this.questionService.queryQuestionDesc('85').subscribe((data) => {
+                this.questionDetail = data;
+                this.questionDetail.questionItemDTOList.forEach( (item) => {
+                    this.selected[item.id] = {};
+                    this.selectAll[item.id] = false;
+                    item.questionItemDetailsDTOS.forEach((item1) => {
+                        this.selected[item.id][item1.id] = false;
+                        item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
+                    });
                 });
+                if (this.questionDetail.status === '2401') {
+                    this.initExpirationTime(this.questionDetail.expirationTime);
+                }
             });
-        });
+        }else {
+            this.questionDetail = storageQuestion;
+            if (this.questionDetail.status === '2401') {
+                this.initExpirationTime(this.questionDetail.expirationTime);
+            }
+        }
     }
     toggleAll(selectAll, selectedItems) {
         for (const id in selectedItems) {
@@ -118,7 +133,6 @@ export class QuestionDetailComponent implements OnInit {
             item1.handleTypeCode = result.handleTypeCode;
             item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
             item1.replyContent = result.replyContent;
-            // console.log(JSON.stringify(this.questionDetail));
             this.storage.store('questionDetail', this.questionDetail);
         }, (reason) => {});
     }
@@ -142,30 +156,42 @@ export class QuestionDetailComponent implements OnInit {
                 }
             });
         });
-        this.questionService.replyQuestion('54', questionArray).subscribe((data) => {
-            this.queryQuestionDesc();
-            if (status === 'ok') {
-                this.finishReplyQuestion();
-            }
-        });
+        if (questionArray.length) {
+            this.questionService.replyQuestion('85', questionArray).subscribe((data) => {
+                this.queryQuestionDesc();
+                if (status === 'ok') {
+                    this.finishReplyQuestion();
+                }
+            });
+        }else {
+            this.toastr.error('请回复问题！');
+        }
     }
     // 回复完成问题
     finishReplyQuestion() {
-        this.questionService.finishReplyQuestion('54').subscribe((data) => {
+        this.questionService.finishReplyQuestion('85').subscribe((data) => {
             this.toastr.success('回复完成', '提示');
             this.queryQuestionDesc();
+            window.clearInterval(this.expirationTimer);
         });
     }
     finish() {
         // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
         if (this.questionDetail.status === '2401' ) {
             const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
+            modalRef.componentInstance.promptContent = '确定是否完成此次回复？';
             modalRef.result.then((result) => {
-                console.log(result);
                 this.saveReplyQuestion(result);
             }, (reason) => {
                 this.saveReplyQuestion(reason);
             });
         }
+    }
+    increaseTime() {
+        const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
+        modalRef.componentInstance.promptContent = '您还有2次加时次数，确定申请加时？';
+        modalRef.result.then((result) => {
+        }, (reason) => {
+        });
     }
 }

@@ -18,4 +18,7 @@ export class QuestionService {
   finishReplyQuestion(recordId: string): Observable<any> {
     return this.http.put(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId + '/completed/', { observe: 'response' });
   }
+  increaseTime(recordId: string): Observable<any> {
+    return this.http.put(API_HOST_QUESTION + '/send-records/' + recordId + '/increase-time/', { observe: 'response' });
+  }
 }
