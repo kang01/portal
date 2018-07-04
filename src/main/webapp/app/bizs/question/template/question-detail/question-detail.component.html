@@ -1,6 +1,6 @@
 <div class="pl-10 mt-10" style="position: relative">
     <p>
-        提问人：{{questionDetail.author}}； 提问日期：{{questionDetail.occurDate}}； 问题类型：{{questionDetail.questionTypeCode}}； 相关项目：{{questionDetail.projectCode}}； 相关单位：{{questionDetail.relatedAgency}}；
+        提问人：{{questionDetail.author}}； 提问日期：{{questionDetail.occurDate}}； 问题类型：{{questionTypeName}}； 相关项目：{{questionDetail.projectCode}}； 相关单位：{{questionDetail.relatedAgency}}；
     </p>
     <p>
         问题概述：{{questionDetail.questionSummary}}
@@ -8,15 +8,18 @@
     <p>
         问题详情：{{questionDetail.questionDescription}}
     </p>
-    <div style="position: absolute;top:0;right: 20px;" *ngIf="questionDetail.status === '2401'">
+    <p *ngIf="questionDetail.status !== '2401' && questionDetail.status !== '2402'">
+        问题回复：{{questionDetail.replyContent}}
+    </p>
+    <div style="position: absolute;top:0;right: 20px;" *ngIf="questionDetail.status === '2401' || this.questionDetail.status === '2402'">
         <span>{{usedTime}}后过期</span>
         <button class="btn btn-sm btn-secondary " (click)="increaseTime()">申请加时</button>
     </div>
-    <form *ngIf="questionDetail.questionTypeCode == '2302'">
+    <form *ngIf="questionDetail.questionTypeCode == '2302' && (questionDetail.status === '2401' || questionDetail.status === '2402')">
         <hr>
         <div class="form-group">
             <label>问题回复</label>
-            <textarea class="form-control" rows="6" style="resize: none;" [(ngModel)]="questionDetail.questionDescription" name="questionDescription" required></textarea>
+            <textarea class="form-control" rows="6" style="resize: none;" [(ngModel)]="questionDetail.replyContent" name="replyContent" required></textarea>
         </div>
     </form>
 </div>

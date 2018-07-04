@@ -18,8 +18,10 @@ export class QuestionDetailComponent implements OnInit {
     questionDetail: QuestionDetail;
     selected = {};
     selectAll = {};
-    usedTime: string;
-    expirationTimer: any;
+    usedTime: string; // 剩余时间
+    expirationTimer: any; // 剩余时间Timer
+    questionTypeName: string; // 样本问题类型
+    sendRecordId = '91';
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -52,12 +54,13 @@ export class QuestionDetailComponent implements OnInit {
             this.usedTime = mins + '分钟';
         }
     }
+    // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
     queryQuestionDesc() {
         const storageQuestion = this.storage.retrieve('questionDetail');
-        console.log(storageQuestion);
         if (!storageQuestion) {
-            this.questionService.queryQuestionDesc('85').subscribe((data) => {
+            this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
                 this.questionDetail = data;
+                this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
                 this.questionDetail.questionItemDTOList.forEach( (item) => {
                     this.selected[item.id] = {};
                     this.selectAll[item.id] = false;
@@ -66,13 +69,13 @@ export class QuestionDetailComponent implements OnInit {
                         item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
                     });
                 });
-                if (this.questionDetail.status === '2401') {
+                if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
                     this.initExpirationTime(this.questionDetail.expirationTime);
                 }
             });
         }else {
             this.questionDetail = storageQuestion;
-            if (this.questionDetail.status === '2401') {
+            if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
                 this.initExpirationTime(this.questionDetail.expirationTime);
             }
         }
@@ -136,8 +139,29 @@ export class QuestionDetailComponent implements OnInit {
             this.storage.store('questionDetail', this.questionDetail);
         }, (reason) => {});
     }
-    // 保存回复得问题内容
-    saveReplyQuestion(status) {
+    // 保存回复得问题内容 请参见样本回复。
+    saveReplyQuestion(replyQuestionObj, callback?) {
+        const cb = callback || function() {};
+        return new Promise((resolve, reject) => {
+            this.questionService.saveReplyQuestion(replyQuestionObj).subscribe((data) => {
+                resolve(data);
+                return cb();
+            }, (err) => {
+                reject(err);
+                return cb(err);
+            });
+        });
+
+    }
+    // 回复完成问题
+    finishReplyQuestion() {
+        this.questionService.finishReplyQuestion(this.sendRecordId).subscribe((data) => {
+            this.toastr.success('回复完成', '提示');
+            this.queryQuestionDesc();
+            window.clearInterval(this.expirationTimer);
+        });
+    }
+    finish() {
         const questionArray = [];
         this.questionDetail.questionItemDTOList.forEach((item) => {
             item.questionItemDetailsDTOS.forEach((item1) => {
@@ -156,42 +180,53 @@ export class QuestionDetailComponent implements OnInit {
                 }
             });
         });
-        if (questionArray.length) {
-            this.questionService.replyQuestion('85', questionArray).subscribe((data) => {
-                this.queryQuestionDesc();
-                if (status === 'ok') {
-                    this.finishReplyQuestion();
-                }
-            });
-        }else {
+        // 样本问题2301  其他问题2302
+        if (this.questionDetail.questionTypeCode === '2301' && !questionArray.length) {
             this.toastr.error('请回复问题！');
+            return;
+        }else {
+            if (!this.questionDetail.replyContent) {
+                this.toastr.error('请回复问题！');
+                return;
+            }
         }
-    }
-    // 回复完成问题
-    finishReplyQuestion() {
-        this.questionService.finishReplyQuestion('85').subscribe((data) => {
-            this.toastr.success('回复完成', '提示');
-            this.queryQuestionDesc();
-            window.clearInterval(this.expirationTimer);
-        });
-    }
-    finish() {
+        const replyQuestionObj = {
+            sendRecordId: this.sendRecordId,
+            replyContent: this.questionDetail.replyContent || '请参见样本回复',
+            replyDetailsDTOList: questionArray
+        };
         // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
-        if (this.questionDetail.status === '2401' ) {
+        if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
             const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
             modalRef.componentInstance.promptContent = '确定是否完成此次回复？';
             modalRef.result.then((result) => {
-                this.saveReplyQuestion(result);
+                // this.saveReplyQuestion(result);
+                this.saveReplyQuestion(replyQuestionObj).then(() => {
+                    this.finishReplyQuestion();
+                });
             }, (reason) => {
-                this.saveReplyQuestion(reason);
+                this.saveReplyQuestion(replyQuestionObj);
             });
         }
     }
+    // 申请加时
     increaseTime() {
+        const times = 2 - this.questionDetail.applyTimes;
+        if (!times) {
+            this.toastr.error('此次申请加时已达到最大上限(2次)！');
+            return;
+        }
         const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
-        modalRef.componentInstance.promptContent = '您还有2次加时次数，确定申请加时？';
+        modalRef.componentInstance.promptContent = '您还有' + times + '次加时次数，确定申请加时？';
         modalRef.result.then((result) => {
+            this.questionService.increaseTime(this.sendRecordId).subscribe((data) => {
+                window.clearInterval(this.expirationTimer);
+                this.queryQuestionDesc();
+            }, (error) => {
+                this.toastr.error(error.error.message);
+            });
         }, (reason) => {
+
         });
     }
 }

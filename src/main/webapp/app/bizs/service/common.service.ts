@@ -16,11 +16,16 @@ export class CommonService {
             value: '2703',
         }
     ];
+    questionType: any[] = [
+        {value: '2301', label: '样本问题'},
+        {value: '2302', label: '其他问题'}
+    ];
     constructor() { }
 
     getStatusName(statusCode) {
         const _allStatusOfLabel = _.union(
-            this.processOptions
+            this.processOptions,
+            this.questionType
         );
         return (_.find(_allStatusOfLabel, {value: statusCode + ''}) || {}).label;
     }

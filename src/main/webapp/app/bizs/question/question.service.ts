@@ -12,13 +12,13 @@ export class QuestionService {
   queryQuestionDesc(recordId: string): Observable<QuestionDetail> {
     return this.http.get<QuestionDetail>( API_HOST_QUESTION + '/question/reply-records/sendRecord/' + recordId);
   }
-  replyQuestion(recordId: string, replyItem): Observable<HttpResponse<any>> {
-    return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId, replyItem, { observe: 'response' });
+  saveReplyQuestion(replyItem): Observable<HttpResponse<any>> {
+    return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord', replyItem, { observe: 'response' });
   }
   finishReplyQuestion(recordId: string): Observable<any> {
-    return this.http.put(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId + '/completed/', { observe: 'response' });
+    return this.http.put(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId + '/completed', { observe: 'response' });
   }
   increaseTime(recordId: string): Observable<any> {
-    return this.http.put(API_HOST_QUESTION + '/send-records/' + recordId + '/increase-time/', { observe: 'response' });
+    return this.http.put(API_HOST_QUESTION + '/send-records/' + recordId + '/increase-time', { observe: 'response' });
   }
 }
