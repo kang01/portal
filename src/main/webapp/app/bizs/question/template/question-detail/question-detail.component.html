@@ -1,49 +1,63 @@
-<div class="pl-10 mt-10" style="position: relative">
+<div class="pl-10 mt-10 xxxx" style="position: relative">
     <p>
-        提问人：{{questionDetail.author}}； 提问日期：{{questionDetail.occurDate}}； 问题类型：{{questionTypeName}}； 相关项目：{{questionDetail.projectCode}}； 相关单位：{{questionDetail.relatedAgency}}；
+        <span class="f-w">提问人</span>：{{questionDetail.author}}；
+        <span class="f-w">提问日期</span>：{{questionDetail.occurDate}}；
+        <span class="f-w">问题类型</span>：{{questionTypeName}}；
+        <span class="f-w">相关项目</span>：{{questionDetail.projectCode}}；
+        <span class="f-w">相关单位</span>：{{questionDetail.relatedAgency}}；
     </p>
     <p>
-        问题概述：{{questionDetail.questionSummary}}
+        <span class="f-w">问题概述</span>：
+        <br> {{questionDetail.questionSummary}}
     </p>
     <p>
-        问题详情：{{questionDetail.questionDescription}}
+        <span class="f-w">问题详情</span>：
+        <br> {{questionDetail.questionDescription}}
     </p>
     <p *ngIf="questionDetail.status !== '2401' && questionDetail.status !== '2402'">
-        问题回复：{{questionDetail.replyContent}}
+        <span class="f-w">问题回复</span>：{{questionDetail.replyContent}}
     </p>
-    <div style="position: absolute;top:0;right: 20px;" *ngIf="questionDetail.status === '2401' || this.questionDetail.status === '2402'">
-        <span>{{usedTime}}后过期</span>
+    <div style="position: absolute;top:-5px;right: 20px;" *ngIf="questionDetail.status === '2401' || this.questionDetail.status === '2402'">
+        <span class="f-w red-color" style="display: inline-block;vertical-align: middle;">{{usedTime}}后过期</span>
         <button class="btn btn-sm btn-secondary " (click)="increaseTime()">申请加时</button>
     </div>
     <form *ngIf="questionDetail.questionTypeCode == '2302' && (questionDetail.status === '2401' || questionDetail.status === '2402')">
         <hr>
         <div class="form-group">
-            <label>问题回复</label>
+            <label class="f-w">问题回复</label>
             <textarea class="form-control" rows="6" style="resize: none;" [(ngModel)]="questionDetail.replyContent" name="replyContent" required></textarea>
         </div>
     </form>
 </div>
 
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-    <ngb-panel *ngFor="let item of questionDetail.questionItemDTOList" id="ngb-panel-0">
+    <ngb-panel *ngFor="let item of questionDetail.questionItemDTOList index as i">
         <ng-template ngbPanelTitle class="p-0">
-            <span>{{item.questionDescription}}</span>
-            <button class="btn btn-sm btn-light pull-right" *ngIf="questionDetail.status === '2401'" (click)="replyQuestionModal($event,item)">回复</button>
+            <div class="text-ellipsis pull-left" style="width:80%;margin-top: 4px;" title="{{item.questionDescription}}">{{item.questionDescription}}</div>
+
+            <div class="pull-right" style="width:10%; padding-right:8px;">
+                <button class="btn btn-ssm btn-primary pull-right" *ngIf="questionDetail.status === '2401'" (click)="replyQuestionModal($event,item)">批量回复</button>
+            </div>
+            <div class="pull-right text-right" style="width:10%;margin-top: 5px">
+                共{{item.questionItemDetailsDTOS.length}}条数据
+            </div>
+
+            <div class=clear-both></div>
         </ng-template>
-        <ng-template ngbPanelContent>
+        <ng-template ngbPanelContent class="p-0">
             <table class="table">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" [(ngModel)]="selectAll[item.id]" (change)="toggleAll(selectAll[item.id],selected[item.id])"></th>
-                        <th>样本编码</th>
-                        <th>样本类型</th>
-                        <th>项目</th>
-                        <th>PID</th>
-                        <th>冻存盒</th>
-                        <th>孔位</th>
-                        <th>处理方式</th>
-                        <th>回复</th>
-                        <th>操作</th>
+                        <th style="width:3%"><input type="checkbox" [(ngModel)]="selectAll[item.id]" (change)="toggleAll(selectAll[item.id],selected[item.id])"></th>
+                        <th style="width:10%">样本编码</th>
+                        <th style="width:10%">样本类型</th>
+                        <th style="width:5%">项目</th>
+                        <th style="width:10%">PID</th>
+                        <th style="width:10%">冻存盒</th>
+                        <th style="width:5%">孔位</th>
+                        <th style="width:10%">处理方式</th>
+                        <th style="width:32%">回复</th>
+                        <th style="width:5%">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,11 +71,11 @@
                         <td>{{item1.tubeRows}}{{item1.tubeColumns}}</td>
                         <td>{{item1.handleTypeName}}</td>
                         <td>
-                            <div title="{{item1.replyContent}}" style="width:60px;height: 30px;overflow: hidden;text-overflow:ellipsis;
+                            <div class="text-ellipsis" title="{{item1.replyContent}}" style="width:400px;height: 30px;line-height:30px;
                             white-space:nowrap">{{item1.replyContent}}</div>
                         </td>
                         <!-- // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期 -->
-                        <td><button class="btn btn-sm btn-light" *ngIf="questionDetail.status === '2401'" (click)="replySingleQuestionModal(item,item1)">回复</button></td>
+                        <td><button class="btn btn-ssm btn-primary" *ngIf="questionDetail.status === '2401'" (click)="replySingleQuestionModal(item,item1)">回复</button></td>
                     </tr>
 
                 </tbody>

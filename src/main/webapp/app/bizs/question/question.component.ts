@@ -23,7 +23,7 @@ export class QuestionComponent implements OnInit {
     // 父组件中使用@ViewChild拿到子组件的变量和方法
     @ViewChild('child2') public child2: QuestionDetailComponent;
     @ViewChild('child1') public child1: QuestionAccreditComponent;
-
+    public statusFromChild: string;
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
@@ -33,10 +33,10 @@ export class QuestionComponent implements OnInit {
 
     ngOnInit() {
         const s = document.querySelector('.navigation-content');
-        s['style'].height = (window.innerHeight - 270) + 'px';
+        s['style'].height = (window.innerHeight - 220) + 'px';
         window.addEventListener('resize', () => {
             // console.log('页面变化了', window.innerHeight);
-            s['style'].height = (window.innerHeight - 270) + 'px';
+            s['style'].height = (window.innerHeight - 220) + 'px';
         });
 
         this.activatedRoute.queryParams.subscribe((data) => {
@@ -122,5 +122,8 @@ export class QuestionComponent implements OnInit {
     }
     cancel() {
 
+    }
+    receive(status: string) {
+        this.statusFromChild = status;
     }
 }

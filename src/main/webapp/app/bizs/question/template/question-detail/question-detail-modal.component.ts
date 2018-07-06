@@ -8,14 +8,14 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'jhi-question-detail-modal',
     templateUrl: './question-detail-modal.component.html',
-    styles: []
+    styleUrls: ['./question-detail.css']
 })
 export class QuestionDetailModalComponent implements OnInit {
     // @Input() questionDetailItemIdArray;
     @Input() questionDescription;
+    @Input() handleTypeCode;
+    @Input() replyContent;
     questionReply: QuestionReply;
-    handleTypeCode;
-    replyContent;
     processOptions: any;
     processOptionsConfig = {
         dropdownDirection: 'auto',

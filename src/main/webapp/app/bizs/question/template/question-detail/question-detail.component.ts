@@ -1,5 +1,5 @@
 import { SessionStorageService } from 'ngx-webstorage';
-import { Component, OnInit, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -8,12 +8,14 @@ import { QuestionService } from './../../question.service';
 import { CommonService } from '../../../service/common.service';
 import { QuestionDetail } from '../../questionDetail.model';
 import { PromptModalComponent } from '../../../prompt-modal/prompt-modal.component';
+import * as _ from 'lodash';
 @Component({
   selector: 'jhi-question-detail',
   templateUrl: './question-detail.component.html',
   styleUrls: ['./question-detail.css']
 })
 export class QuestionDetailComponent implements OnInit {
+    @Output() private outer = new EventEmitter<string>();
     @BlockUI() blockUI: NgBlockUI;
     questionDetail: QuestionDetail;
     selected = {};
@@ -21,7 +23,7 @@ export class QuestionDetailComponent implements OnInit {
     usedTime: string; // 剩余时间
     expirationTimer: any; // 剩余时间Timer
     questionTypeName: string; // 样本问题类型
-    sendRecordId = '91';
+    sendRecordId = '103';
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -42,6 +44,12 @@ export class QuestionDetailComponent implements OnInit {
     calcTime(usedTime) {
         const start = new Date().getTime();
         const mins = Math.floor((usedTime - start) / 60000);
+        if (mins <= 0) {
+            window.clearInterval(this.expirationTimer);
+            this.storage.clear('questionDetail');
+            // this.queryQuestionDesc();
+            return;
+        }
         if (mins > 60) {
             const hour = mins / 60;
             if (hour > 24) {
@@ -72,12 +80,24 @@ export class QuestionDetailComponent implements OnInit {
                 if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
                     this.initExpirationTime(this.questionDetail.expirationTime);
                 }
+                // 给父层广播状态，来判断是否显示完成按钮
+                this.outer.emit(this.questionDetail.status);
             });
         }else {
             this.questionDetail = storageQuestion;
+            this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
+                this.questionDetail.questionItemDTOList.forEach( (item) => {
+                    this.selected[item.id] = {};
+                    this.selectAll[item.id] = false;
+                    item.questionItemDetailsDTOS.forEach((item1) => {
+                        this.selected[item.id][item1.id] = false;
+                        item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
+                    });
+                });
             if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
                 this.initExpirationTime(this.questionDetail.expirationTime);
             }
+            this.outer.emit(this.questionDetail.status);
         }
     }
     toggleAll(selectAll, selectedItems) {
@@ -110,7 +130,7 @@ export class QuestionDetailComponent implements OnInit {
             }
         }
         if (questionIds.length) {
-            const modalRef = this.modalService.open(QuestionDetailModalComponent, {backdrop: 'static'});
+            const modalRef = this.modalService.open(QuestionDetailModalComponent, {backdrop: 'static', size: 'lg'});
             modalRef.componentInstance.questionDescription = item.questionDescription;
             modalRef.result.then((result) => {
                 questionIds.forEach((id) => {
@@ -122,6 +142,7 @@ export class QuestionDetailComponent implements OnInit {
                         }
                     });
                 });
+                this.storage.store('questionDetail', this.questionDetail);
                 // console.log(JSON.stringify(this.questionDetail));
             });
         }else {
@@ -130,8 +151,10 @@ export class QuestionDetailComponent implements OnInit {
     }
     // 单个问题的回复
     replySingleQuestionModal(item, item1) {
-        const modalRef = this.modalService.open(QuestionDetailModalComponent, {backdrop: 'static'});
+        const modalRef = this.modalService.open(QuestionDetailModalComponent, {backdrop: 'static', size: 'lg'});
         modalRef.componentInstance.questionDescription = item.questionDescription;
+        modalRef.componentInstance.handleTypeCode = item1.handleTypeCode;
+        modalRef.componentInstance.replyContent = item1.replyContent;
         modalRef.result.then((result) => {
             item1.handleTypeCode = result.handleTypeCode;
             item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
@@ -156,14 +179,18 @@ export class QuestionDetailComponent implements OnInit {
     // 回复完成问题
     finishReplyQuestion() {
         this.questionService.finishReplyQuestion(this.sendRecordId).subscribe((data) => {
-            this.toastr.success('回复完成', '提示');
+            this.toastr.success('回复完成');
+            const qInfo = this.storage.retrieve('questionDetail');
+            qInfo.status = '2502';
+            this.storage.store('questionDetail', qInfo);
             this.queryQuestionDesc();
             window.clearInterval(this.expirationTimer);
         });
     }
     finish() {
+        const questionDetail = _.clone(this.questionDetail);
         const questionArray = [];
-        this.questionDetail.questionItemDTOList.forEach((item) => {
+        questionDetail.questionItemDTOList.forEach((item) => {
             item.questionItemDetailsDTOS.forEach((item1) => {
                 const obj = {
                     id: null,
@@ -171,41 +198,55 @@ export class QuestionDetailComponent implements OnInit {
                     replyContent: null,
                     questionItemDetailsId: null
                 };
-                if (item1.handleTypeCode) {
+                // if (item1.handleTypeCode) {
                     obj.id = item1.replyDetailsId;
                     obj.handleTypeCode = item1.handleTypeCode;
                     obj.replyContent = item1.replyContent;
                     obj.questionItemDetailsId = item1.id;
                     questionArray.push(obj);
-                }
+                // }
             });
         });
         // 样本问题2301  其他问题2302
-        if (this.questionDetail.questionTypeCode === '2301' && !questionArray.length) {
+        if (questionDetail.questionTypeCode === '2301' && !questionArray.length) {
             this.toastr.error('请回复问题！');
             return;
         }else {
-            if (!this.questionDetail.replyContent) {
+            if (questionDetail.questionTypeCode === '2302' && !questionDetail.replyContent) {
                 this.toastr.error('请回复问题！');
                 return;
             }
         }
         const replyQuestionObj = {
             sendRecordId: this.sendRecordId,
-            replyContent: this.questionDetail.replyContent || '请参见样本回复',
+            replyContent: questionDetail.replyContent || '请参见样本回复',
             replyDetailsDTOList: questionArray
         };
         // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
-        if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
+        if (questionDetail.status === '2401' || questionDetail.status === '2402') {
+            const len = _.filter(questionArray, {handleTypeCode: null}).length;
             const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
-            modalRef.componentInstance.promptContent = '确定是否完成此次回复？';
+            modalRef.componentInstance.status = '1001';
+            if (len) {
+                modalRef.componentInstance.disabled = true;
+                modalRef.componentInstance.promptContent = '有未回复的样本，不能进行回复完成!';
+            }else {
+                modalRef.componentInstance.promptContent = '是否完成此次回复？';
+            }
             modalRef.result.then((result) => {
-                // this.saveReplyQuestion(result);
+            // 保存
+            if (result === 'save') {
+                this.saveReplyQuestion(replyQuestionObj).then(() => {
+                    this.toastr.success('保存成功！');
+                });
+            }
+            // 回复完成
+            if (result === 'ok') {
                 this.saveReplyQuestion(replyQuestionObj).then(() => {
                     this.finishReplyQuestion();
                 });
+            }
             }, (reason) => {
-                this.saveReplyQuestion(replyQuestionObj);
             });
         }
     }
@@ -218,6 +259,7 @@ export class QuestionDetailComponent implements OnInit {
         }
         const modalRef = this.modalService.open(PromptModalComponent, {backdrop: 'static'});
         modalRef.componentInstance.promptContent = '您还有' + times + '次加时次数，确定申请加时？';
+        modalRef.componentInstance.status = '2001';
         modalRef.result.then((result) => {
             this.questionService.increaseTime(this.sendRecordId).subscribe((data) => {
                 window.clearInterval(this.expirationTimer);

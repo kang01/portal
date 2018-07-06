@@ -17,7 +17,7 @@
             <!-- <router-outlet [message]="msgToChild"></router-outlet> -->
             <!-- <jhi-question-detail></jhi-question-detail> -->
             <jhi-question-accredit #child1 *ngIf="selectedIndex == 1"></jhi-question-accredit>
-            <jhi-question-detail #child2 *ngIf="selectedIndex == 2"></jhi-question-detail>
+            <jhi-question-detail #child2 *ngIf="selectedIndex == 2" (outer)="receive($event)"></jhi-question-detail>
             <jhi-question-history #child3 *ngIf="selectedIndex == 3"></jhi-question-history>
         </div>
 
@@ -25,11 +25,12 @@
     <div class="card-footer">
         <div class="text-right">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-secondary" (click)="preStep()">上一步</button>
-                <button type="button" class="btn btn-secondary" (click)="nextStep()" *ngIf="selectedIndex == 1">下一步</button>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="preStep()">上一步</button>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="nextStep()" *ngIf="selectedIndex == 1">下一步</button>
             </div>
+            <!-- 问题发送记录状态：2401：已发送，2402:回复中，2403: 已回复，2404:已过期 -->
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-info" *ngIf="selectedIndex == 2" (click)="finish()">完成</button>
+                <button type="button" class="btn btn-sm btn-info" *ngIf="selectedIndex == 2 && (this.statusFromChild == '2401'|| this.statusFromChild == '2402')" (click)="finish()">完成</button>
                 <!-- <button type="button" class="btn btn-danger" *ngIf="selectedIndex == 2" (click)="cancel()">取消</button> -->
             </div>
         </div>

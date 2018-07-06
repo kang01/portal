@@ -1,13 +1,18 @@
-<div class="modal-header">
-    <h4 class="modal-title">提示</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<div class="modal-body">
-    <p>{{promptContent}}</p>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="ok()">确定</button>
-    <button type="button" class="btn btn-light" (click)="cancel()">取消</button>
+<div *ngFor="let item of messages">
+    <div *ngIf="item.status==status">
+        <div class="modal-header">
+            <h4 class="modal-title">{{item.title}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+        </div>
+        <div class="modal-body">
+            <p>{{item.content}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="ok()" [disabled]="disabled">{{item.btnOk}}</button>
+            <button type="button" class="btn btn-primary" *ngIf="item.isSave" (click)="save()">保存</button>
+            <button type="button" class="btn btn-light" (click)="cancel()">{{item.btnCancel}}</button>
+        </div>
+    </div>
 </div>

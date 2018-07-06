@@ -11,6 +11,53 @@ p {
     margin-top: 10px;
 }
 
-.card-body {
+::ng-deep .jh-card {
     padding: 0 !important;
+}
+
+::ng-deep .card-body {
+    padding: 0 !important;
+}
+
+::ng-deep .card-header {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    padding-left: 8px !important;
+}
+
+::ng-deep .table {
+    margin: 0;
+}
+
+::ng-deep .table th {
+    padding: 6px 13px !important;
+}
+
+::ng-deep .table td {
+    padding: 0 12px !important;
+    vertical-align: middle;
+}
+
+.text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.f-w {
+    font-weight: bold;
+}
+
+.red-color {
+    color: red;
+}
+
+.reasize-none {
+    resize: none;
+}
+
+.btn-group-sm>.btn,
+.btn-ssm {
+    padding: 2px;
+    font-size: 12px;
 }
