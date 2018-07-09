@@ -50,8 +50,9 @@ public class UserDTO {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
-
+    private String registerSource;
     private Set<String> authorities;
+    private String authCode;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -169,6 +170,22 @@ public class UserDTO {
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getRegisterSource() {
+        return registerSource;
+    }
+
+    public void setRegisterSource(String registerSource) {
+        this.registerSource = registerSource;
+    }
+
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
     }
 
     public Set<String> getAuthorities() {

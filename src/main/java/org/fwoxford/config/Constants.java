@@ -11,7 +11,9 @@ public final class Constants {
     public static final String SYSTEM_ACCOUNT = "system";
     public static final String ANONYMOUS_USER = "anonymoususer";
     public static final String DEFAULT_LANGUAGE = "zh-cn";
-    
+    //注册来源：102 陌生人登录时创建的
+    public static final String REGISTER_SOURCE_STRANGER = "102";
     private Constants() {
     }
+
 }

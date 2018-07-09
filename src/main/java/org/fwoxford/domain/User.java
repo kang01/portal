@@ -231,4 +231,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", activationKey='" + activationKey + '\'' +
             "}";
     }
+    @Size(max = 20)
+    @Column(name = "register_source", length = 20)
+    @JsonIgnore
+    private String registerSource;
+
+    public String getRegisterSource() {
+        return registerSource;
+    }
+
+    public void setRegisterSource(String registerSource) {
+        this.registerSource = registerSource;
+    }
 }

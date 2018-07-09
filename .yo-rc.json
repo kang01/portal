@@ -8,7 +8,7 @@
     "baseName": "GwBbisStrangerPortal",
     "packageName": "org.fwoxford",
     "packageFolder": "org/fwoxford",
-    "serverPort": "8081",
+    "serverPort": "8082",
     "authenticationType": "jwt",
     "cacheProvider": "hazelcast",
     "enableHibernateCache": true,
