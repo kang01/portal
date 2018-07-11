@@ -1,5 +1,6 @@
 package org.fwoxford.web.rest;
 
+import ch.qos.logback.core.util.TimeUtil;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -19,12 +20,12 @@ import org.fwoxford.security.jwt.TokenProvider;
 import org.fwoxford.service.UserService;
 import org.fwoxford.service.dto.StrangerDTO;
 import org.fwoxford.service.dto.UserDTO;
-import org.fwoxford.web.rest.errors.BadRequestAlertException;
-import org.fwoxford.web.rest.errors.CustomParameterizedException;
+import org.fwoxford.web.rest.errors.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @RestController
@@ -78,11 +80,16 @@ public class StrangerResource {
     public ResponseEntity<StrangerDTO> createUser(@Valid @RequestBody StrangerDTO strangerDTO) throws URISyntaxException, JsonProcessingException {
         log.debug("REST request to check strangerDTO : {}", strangerDTO);
         //用邮箱，授权码，HttpUrl ，问题编码 验证是否有效存在
-//        StrangerDTO strangerDTO = (StrangerDTO) JSONObject.toBean(jsonObject, StrangerDTO.class);
         JSONObject jsonObject = JSONObject.fromObject(strangerDTO);
         JSONObject strangerDTOs = entityClient.getEntity("authorization-records/entity",jsonObject);
-        if(strangerDTOs==null){
-            throw new CustomParameterizedException("查询授权失败！",strangerDTO.toString());
+        if(strangerDTOs==null || strangerDTOs.size()==0){
+            throw new InvalidAuthorizationException("授权失败！");
+        }
+        //判断是否过期---获取过期时间
+        String expirationTime = strangerDTOs.getString("expirationTime");
+        ZonedDateTime date = ZonedDateTime.parse(expirationTime);
+        if(date.isBefore(ZonedDateTime.now())){
+            throw new InvalidAuthorizationException("授权已过期，请联系系统管理员！");
         }
         Long sendRecordId = strangerDTOs.getLong("sendRecordId");
         String name = strangerDTOs.getString("strangerName");
