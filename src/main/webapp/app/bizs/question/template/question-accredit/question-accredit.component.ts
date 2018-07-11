@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Broadcaster } from '../../../../shared';
-import { MessageEvent } from '../../../../shared';
 import { ToastrService } from 'ngx-toastr';
-
+import { ActivatedRoute, Params } from '@angular/router';
+import * as _ from 'lodash';
+import { QuestionService } from './../../question.service';
 @Component({
     selector: 'jhi-question-accredit',
     templateUrl: './question-accredit.component.html',
@@ -14,21 +14,41 @@ import { ToastrService } from 'ngx-toastr';
 export class QuestionAccreditComponent implements OnInit {
     questionNo: string;
     questionAccreditNo: string;
+    questionEmail: string;
+    receivePerson: string;
+    sendPerson: string;
+    pathName: string;
+    @Input() private questionInfo: string;
     constructor(
-        private broadcaster: Broadcaster,
-        private messageEvent: MessageEvent,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private activatedRoute: ActivatedRoute,
+        private questionService: QuestionService
     ) {}
 
     ngOnInit() {
-        // this.registerTypeBroadcast();
+        const infoArray = _.split(this.questionInfo, '|');
+        console.log(infoArray);
+        this.sendPerson = infoArray[0];
+        this.questionNo = infoArray[1];
+        this.questionEmail = infoArray[2];
+        this.receivePerson = infoArray[3];
+        this.pathName = location.href;
     }
     verification() {
-        if (!this.questionNo || !this.questionAccreditNo) {
+        if (!this.questionNo || !this.questionEmail || !this.questionAccreditNo) {
             this.toastr.error('请填写必填项！', '提示');
             return true;
         }else {
-            return false;
+            const obj = {
+                'strangerEmail': this.questionEmail,
+                'authorizationCode': this.questionAccreditNo,
+                'httpUrl': this.pathName,
+                'questionCode': this.questionNo
+
+            };
+            this.questionService.strangerLogin(obj).subscribe((data) => {
+                return false;
+            });
         }
     }
 }

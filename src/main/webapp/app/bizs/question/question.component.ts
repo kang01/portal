@@ -20,6 +20,7 @@ export class QuestionComponent implements OnInit {
         {id: 1, name: '授权', className: 'active', routerName: 'question-accredit'},
         {id: 2, name: '问题详情', className: '', routerName: 'question-detail'}
     ];
+    msgToChild: string;
     // 父组件中使用@ViewChild拿到子组件的变量和方法
     @ViewChild('child2') public child2: QuestionDetailComponent;
     @ViewChild('child1') public child1: QuestionAccreditComponent;
@@ -41,7 +42,9 @@ export class QuestionComponent implements OnInit {
 
         this.activatedRoute.queryParams.subscribe((data) => {
             console.log(data);
-            this.selectedIndex = Number(data.id);
+            const questionInfo = new Buffer(data.q, 'base64').toString();
+            this.msgToChild = questionInfo;
+            this.selectedIndex = 1;
         });
         setTimeout(() => {
             this.changeTitle();
@@ -71,9 +74,11 @@ export class QuestionComponent implements OnInit {
         const firstId = this.navigationList[0].id;
         const obj = _.find(this.navigationList, {id: this.selectedIndex});
         if (obj) {
-            this.router.navigate([obj.routerName, obj.id], { relativeTo: this.activatedRoute, queryParams: { id: obj.id }});
+            this.router.navigate([obj.routerName]);
+            // this.router.navigate([obj.routerName, obj.id], { relativeTo: this.activatedRoute, queryParams: { id: obj.id }});
         }else {
-            this.router.navigate([routerName, firstId], { relativeTo: this.activatedRoute, queryParams: { id: firstId }});
+            this.router.navigate([routerName]);
+            // this.router.navigate([routerName, firstId], { relativeTo: this.activatedRoute, queryParams: { id: firstId }});
         }
     }
     // 导航的样式变化

@@ -9,5 +9,5 @@ export const HOME_ROUTE: Route = {
     //     authorities: [],
     //     pageTitle: 'home.title'
     // },
-    redirectTo: '/question-management/question-accredit?id=1', pathMatch: 'full'
+    redirectTo: 'question-management', pathMatch: 'full'
 };

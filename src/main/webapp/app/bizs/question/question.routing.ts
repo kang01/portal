@@ -9,10 +9,10 @@ export const QuestionRoute: Route = {
     path: 'question-management',
     component: QuestionComponent,
     children: [
-        {path: 'question-accredit/:id', component: QuestionAccreditComponent},
-        {path: 'question-detail/:id', component: QuestionDetailComponent},
-        {path: 'question-history/:id', component: QuestionHistoryComponent},
-        { path: '', redirectTo: '/question-management/question-accredit?id=1', pathMatch: 'full' },
+        {path: 'question-accredit', component: QuestionAccreditComponent},
+        {path: 'question-detail', component: QuestionDetailComponent},
+        {path: 'question-history', component: QuestionHistoryComponent},
+        { path: '', redirectTo: 'question-accredit', pathMatch: 'full' },
         { path: '**', component: QuestionAccreditComponent }
     ]
 };
