@@ -42,9 +42,11 @@ export class QuestionComponent implements OnInit {
 
         this.activatedRoute.queryParams.subscribe((data) => {
             console.log(data);
-            const questionInfo = new Buffer(data.q, 'base64').toString();
-            this.msgToChild = questionInfo;
-            this.selectedIndex = 1;
+            if (data.q) {
+                const questionInfo = new Buffer(data.q, 'base64').toString();
+                this.msgToChild = questionInfo;
+                this.selectedIndex = 1;
+            }
         });
         setTimeout(() => {
             this.changeTitle();
@@ -52,17 +54,29 @@ export class QuestionComponent implements OnInit {
     }
 
     switchTitleHandler(item) {
-        if (this.child1 && this.child1.verification()) {
-            return;
+        // if (this.child1 && this.child1.verification()) {
+        //     return;
+        // }
+        // let lastIndex;
+        // this.selectedIndex = item.id;
+        // this.navigationList.forEach((title) => {
+        //     if (title.className === 'active') {
+        //         lastIndex = Number(title.id);
+        //     }
+        // });
+        // this.changeTitle();
+        if (this.child1) {
+            this.child1.verification().then((data) => {
+                let lastIndex;
+                this.selectedIndex = item.id;
+                this.navigationList.forEach((title) => {
+                    if (title.className === 'active') {
+                        lastIndex = Number(title.id);
+                    }
+                });
+                this.changeTitle();
+            });
         }
-        let lastIndex;
-        this.selectedIndex = item.id;
-        this.navigationList.forEach((title) => {
-            if (title.className === 'active') {
-                lastIndex = Number(title.id);
-            }
-        });
-        this.changeTitle();
     }
     changeTitle() {
         this.changeTitleStyle();
@@ -74,10 +88,12 @@ export class QuestionComponent implements OnInit {
         const firstId = this.navigationList[0].id;
         const obj = _.find(this.navigationList, {id: this.selectedIndex});
         if (obj) {
-            this.router.navigate([obj.routerName]);
+            this.selectedIndex = obj.id;
+            this.router.navigate([obj.routerName], { relativeTo: this.activatedRoute});
             // this.router.navigate([obj.routerName, obj.id], { relativeTo: this.activatedRoute, queryParams: { id: obj.id }});
         }else {
-            this.router.navigate([routerName]);
+            this.selectedIndex = firstId;
+            this.router.navigate([routerName], { relativeTo: this.activatedRoute});
             // this.router.navigate([routerName, firstId], { relativeTo: this.activatedRoute, queryParams: { id: firstId }});
         }
     }
@@ -101,19 +117,33 @@ export class QuestionComponent implements OnInit {
     }
     // 下一步
     nextStep() {
-        if (this.child1 && this.child1.verification()) {
-            return;
+        // if (this.child1 && this.child1.verification()) {
+        //     return;
+        // }
+        // let lastIndex;
+        // _.forEach(this.navigationList, (title) => {
+        //     if (Number(title.id) !== this.navigationList.length) {
+        //         if (title.className === 'active') {
+        //             lastIndex = Number(title.id);
+        //             this.selectedIndex = lastIndex + 1;
+        //         }
+        //     }
+        // });
+        // this.changeTitle();
+        if (this.child1) {
+            this.child1.verification().then(() => {
+                let lastIndex;
+                _.forEach(this.navigationList, (title) => {
+                    if (Number(title.id) !== this.navigationList.length) {
+                        if (title.className === 'active') {
+                            lastIndex = Number(title.id);
+                            this.selectedIndex = lastIndex + 1;
+                        }
+                    }
+                });
+                this.changeTitle();
+            });
         }
-        let lastIndex;
-        _.forEach(this.navigationList, (title) => {
-            if (Number(title.id) !== this.navigationList.length) {
-                if (title.className === 'active') {
-                    lastIndex = Number(title.id);
-                    this.selectedIndex = lastIndex + 1;
-                }
-            }
-        });
-        this.changeTitle();
     }
     // 上一步
     preStep() {

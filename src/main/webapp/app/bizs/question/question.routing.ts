@@ -12,7 +12,9 @@ export const QuestionRoute: Route = {
         {path: 'question-accredit', component: QuestionAccreditComponent},
         {path: 'question-detail', component: QuestionDetailComponent},
         {path: 'question-history', component: QuestionHistoryComponent},
+        // 默认加载的路由
         { path: '', redirectTo: 'question-accredit', pathMatch: 'full' },
-        { path: '**', component: QuestionAccreditComponent }
+        // 匹配不到跳到首页
+        { path: '**', redirectTo: 'question-accredit' }
     ]
 };

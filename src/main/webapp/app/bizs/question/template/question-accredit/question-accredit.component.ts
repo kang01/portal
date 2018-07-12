@@ -35,20 +35,24 @@ export class QuestionAccreditComponent implements OnInit {
         this.pathName = location.href;
     }
     verification() {
-        if (!this.questionNo || !this.questionEmail || !this.questionAccreditNo) {
-            this.toastr.error('请填写必填项！', '提示');
-            return true;
-        }else {
-            const obj = {
-                'strangerEmail': this.questionEmail,
-                'authorizationCode': this.questionAccreditNo,
-                'httpUrl': this.pathName,
-                'questionCode': this.questionNo
-
-            };
-            this.questionService.strangerLogin(obj).subscribe((data) => {
-                return false;
-            });
-        }
+        return new Promise((resolve, reject) => {
+            if (!this.questionNo || !this.questionEmail || !this.questionAccreditNo) {
+                this.toastr.error('请填写必填项！', '提示');
+                reject();
+            }else {
+                const obj = {
+                    'strangerEmail': this.questionEmail,
+                    'authorizationCode': this.questionAccreditNo,
+                    'httpUrl': this.pathName,
+                    'questionCode': this.questionNo
+                };
+                this.questionService.strangerLogin(obj).subscribe((data) => {
+                    resolve(data);
+                }, (err) => {
+                    this.toastr.error(err.error.message);
+                    reject(err);
+                });
+            }
+        });
     }
 }
