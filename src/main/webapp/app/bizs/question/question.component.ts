@@ -21,6 +21,7 @@ export class QuestionComponent implements OnInit {
         {id: 2, name: '问题详情', className: '', routerName: 'question-detail'}
     ];
     msgToChild: string;
+    urlParam: string;
     // 父组件中使用@ViewChild拿到子组件的变量和方法
     @ViewChild('child2') public child2: QuestionDetailComponent;
     @ViewChild('child1') public child1: QuestionAccreditComponent;
@@ -43,9 +44,12 @@ export class QuestionComponent implements OnInit {
         this.activatedRoute.queryParams.subscribe((data) => {
             console.log(data);
             if (data.q) {
+                this.urlParam = data.q;
                 const questionInfo = new Buffer(data.q, 'base64').toString();
                 this.msgToChild = questionInfo;
                 this.selectedIndex = 1;
+                const str = 'referer_full=' + location.href;
+                document.cookie = str;
             }
         });
         setTimeout(() => {
@@ -89,7 +93,7 @@ export class QuestionComponent implements OnInit {
         const obj = _.find(this.navigationList, {id: this.selectedIndex});
         if (obj) {
             this.selectedIndex = obj.id;
-            this.router.navigate([obj.routerName], { relativeTo: this.activatedRoute});
+            this.router.navigate([obj.routerName], { relativeTo: this.activatedRoute, queryParams: { q: this.urlParam }});
             // this.router.navigate([obj.routerName, obj.id], { relativeTo: this.activatedRoute, queryParams: { id: obj.id }});
         }else {
             this.selectedIndex = firstId;

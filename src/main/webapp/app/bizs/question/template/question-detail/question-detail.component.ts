@@ -23,7 +23,7 @@ export class QuestionDetailComponent implements OnInit {
     usedTime: string; // 剩余时间
     expirationTimer: any; // 剩余时间Timer
     questionTypeName: string; // 样本问题类型
-    sendRecordId = '126';
+    sendRecordId = '144';
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,

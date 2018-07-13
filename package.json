@@ -36,7 +36,7 @@
     "reflect-metadata": "0.1.10",
     "rxjs": "5.5.6",
     "save": "^2.3.2",
-    "selectize": "^0.12.4",
+    "selectize": "^0.12.6",
     "swagger-ui": "2.2.10",
     "tether": "1.4.0",
     "zone.js": "0.8.19"
