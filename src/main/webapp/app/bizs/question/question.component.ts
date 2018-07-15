@@ -6,6 +6,7 @@ import { MessageEvent } from '../../shared';
 import { QuestionDetailComponent } from './template/question-detail/question-detail.component';
 import { QuestionAccreditComponent } from './template/question-accredit/question-accredit.component';
 import { PARAMETERS } from '@angular/core/src/util/decorators';
+import { AuthorizationRecord } from './authorizationRecord.model';
 @Component({
   selector: 'jhi-question',
   templateUrl: './question.component.html',
@@ -21,11 +22,13 @@ export class QuestionComponent implements OnInit {
         {id: 2, name: '问题详情', className: '', routerName: 'question-detail'}
     ];
     msgToChild: string;
+    msgToChildSendRecordId: any;
     urlParam: string;
     // 父组件中使用@ViewChild拿到子组件的变量和方法
     @ViewChild('child2') public child2: QuestionDetailComponent;
     @ViewChild('child1') public child1: QuestionAccreditComponent;
     public statusFromChild: string;
+    authorizationRecord: AuthorizationRecord;
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
@@ -34,13 +37,23 @@ export class QuestionComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.changeContentHeight();
+        this.queryUrlInfo();
+        setTimeout(() => {
+            this.changeTitle();
+        }, 800);
+    }
+    // 调整可视化的内容高度
+    changeContentHeight() {
         const s = document.querySelector('.navigation-content');
         s['style'].height = (window.innerHeight - 220) + 'px';
         window.addEventListener('resize', () => {
-            // console.log('页面变化了', window.innerHeight);
             s['style'].height = (window.innerHeight - 220) + 'px';
         });
 
+    }
+    // 获取浏览器的url
+    queryUrlInfo() {
         this.activatedRoute.queryParams.subscribe((data) => {
             console.log(data);
             if (data.q) {
@@ -52,25 +65,12 @@ export class QuestionComponent implements OnInit {
                 document.cookie = str;
             }
         });
-        setTimeout(() => {
-            this.changeTitle();
-        }, 800);
     }
-
     switchTitleHandler(item) {
-        // if (this.child1 && this.child1.verification()) {
-        //     return;
-        // }
-        // let lastIndex;
-        // this.selectedIndex = item.id;
-        // this.navigationList.forEach((title) => {
-        //     if (title.className === 'active') {
-        //         lastIndex = Number(title.id);
-        //     }
-        // });
-        // this.changeTitle();
         if (this.child1) {
             this.child1.verification().then((data) => {
+                this.authorizationRecord = data;
+                this.msgToChildSendRecordId = this.authorizationRecord.sendRecordId;
                 let lastIndex;
                 this.selectedIndex = item.id;
                 this.navigationList.forEach((title) => {
@@ -121,21 +121,10 @@ export class QuestionComponent implements OnInit {
     }
     // 下一步
     nextStep() {
-        // if (this.child1 && this.child1.verification()) {
-        //     return;
-        // }
-        // let lastIndex;
-        // _.forEach(this.navigationList, (title) => {
-        //     if (Number(title.id) !== this.navigationList.length) {
-        //         if (title.className === 'active') {
-        //             lastIndex = Number(title.id);
-        //             this.selectedIndex = lastIndex + 1;
-        //         }
-        //     }
-        // });
-        // this.changeTitle();
         if (this.child1) {
-            this.child1.verification().then(() => {
+            this.child1.verification().then((data) => {
+                this.authorizationRecord = data;
+                this.msgToChildSendRecordId = this.authorizationRecord.sendRecordId;
                 let lastIndex;
                 _.forEach(this.navigationList, (title) => {
                     if (Number(title.id) !== this.navigationList.length) {

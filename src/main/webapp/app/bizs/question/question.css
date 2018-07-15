@@ -108,3 +108,7 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+::ng-deep .jh-card {
+    padding: 0 !important;
+}
