@@ -198,11 +198,11 @@ export class QuestionDetailComponent implements OnInit {
     finishReplyQuestion() {
         this.questionService.finishReplyQuestion(this.sendRecordId).subscribe((data) => {
             this.toastr.success('回复完成');
-            const qInfo = this.storage.retrieve('questionDetail');
-            qInfo.status = '2502';
-            this.storage.store('questionDetail', qInfo);
-            this.queryQuestionDesc();
+            // const qInfo = this.storage.retrieve('questionDetail');
+            // qInfo.status = '2502';
+            // this.storage.store('questionDetail', qInfo);
             window.clearInterval(this.expirationTimer);
+            this.queryQuestionDesc();
         });
     }
     finish() {

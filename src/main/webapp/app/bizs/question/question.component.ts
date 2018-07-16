@@ -1,11 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as _ from 'lodash';
-import { Broadcaster } from '../../shared';
-import { MessageEvent } from '../../shared';
 import { QuestionDetailComponent } from './template/question-detail/question-detail.component';
 import { QuestionAccreditComponent } from './template/question-accredit/question-accredit.component';
-import { PARAMETERS } from '@angular/core/src/util/decorators';
 import { AuthorizationRecord } from './authorizationRecord.model';
 @Component({
   selector: 'jhi-question',
@@ -31,9 +28,7 @@ export class QuestionComponent implements OnInit {
     authorizationRecord: AuthorizationRecord;
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private broadcaster: Broadcaster,
-        private messageEvent: MessageEvent
+        private activatedRoute: ActivatedRoute
     ) {}
 
     ngOnInit() {
