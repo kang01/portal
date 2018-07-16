@@ -34,7 +34,19 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
 
     @Override
     public JSONObject getOne(long id) {
-        return null;
+        JSONObject jsonObject = restTemplate.getForObject(getUrl("authorization-records/", id),JSONObject.class);
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject findOne(long id, String url) {
+        String uri = getUrl(url, id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(uri,HttpMethod.GET,entity, JSONObject.class);
+        return responseEntity.getBody();
     }
 
     @Override
@@ -53,7 +65,6 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
     }
     @Override
     public JSONObject getEntity(JSONObject object) throws JsonProcessingException  {
-        HttpEntity<String> entity = getJsonEntity(object);
        return null;
     }
 
@@ -67,4 +78,9 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
         return responseEntity.getBody();
     }
 
+    public JSONObject queryOne(Long id, String url) {
+        String uri = getUrl(url, id);
+        JSONObject jsonObject = restTemplate.getForObject(uri,JSONObject.class);
+        return jsonObject;
+    }
 }

@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
+import net.sf.json.JSONObject;
+import org.fwoxford.service.EntityClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +34,11 @@ public class TokenProvider {
 
     private final JHipsterProperties jHipsterProperties;
 
-    public TokenProvider(JHipsterProperties jHipsterProperties) {
+    private EntityClient entityClient;
+
+    public TokenProvider(JHipsterProperties jHipsterProperties,EntityClient entityClient) {
         this.jHipsterProperties = jHipsterProperties;
+        this.entityClient = entityClient;
     }
 
     @PostConstruct
@@ -47,7 +52,10 @@ public class TokenProvider {
             1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe();
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
+    public String getSecretKey() {
+        return this.secretKey;
+    }
+    public String createTokenWithParams(Authentication authentication, boolean rememberMe,Long params) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(","));
@@ -64,7 +72,7 @@ public class TokenProvider {
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(SignatureAlgorithm.HS512, secretKey)
-            .setExpiration(validity)
+            .setExpiration(validity).claim("authId",params)
             .compact();
     }
 
@@ -83,7 +91,26 @@ public class TokenProvider {
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
+    public String createToken(Authentication authentication, boolean rememberMe) {
+        String authorities = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
 
+        long now = (new Date()).getTime();
+        Date validity;
+        if (rememberMe) {
+            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
+        } else {
+            validity = new Date(now + this.tokenValidityInMilliseconds);
+        }
+
+        return Jwts.builder()
+            .setSubject(authentication.getName())
+            .claim(AUTHORITIES_KEY, authorities)
+            .signWith(SignatureAlgorithm.HS512, secretKey)
+            .setExpiration(validity).claim("authId",1)
+            .compact();
+    }
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(authToken);
@@ -105,5 +132,9 @@ public class TokenProvider {
             log.trace("JWT token compact of handler are invalid trace: {}", e);
         }
         return false;
+    }
+
+    public JSONObject queryOne(Long aLong, String s) {
+        return entityClient.findOne(aLong,s);
     }
 }

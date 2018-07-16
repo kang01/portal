@@ -4,6 +4,8 @@ import ch.qos.logback.core.util.TimeUtil;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import net.sf.json.JSONObject;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -34,8 +36,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -77,13 +82,29 @@ public class StrangerResource {
     @PostMapping("/login")
     @Timed
 //    @Secured(AuthoritiesConstants.ANSWER)
-    public ResponseEntity<StrangerDTO> createUser(@Valid @RequestBody StrangerDTO strangerDTO) throws URISyntaxException, JsonProcessingException {
+    public ResponseEntity<StrangerDTO> createUser(@Valid @RequestBody StrangerDTO strangerDTO, HttpServletRequest request) throws URISyntaxException, JsonProcessingException {
         log.debug("REST request to check strangerDTO : {}", strangerDTO);
         //用邮箱，授权码，HttpUrl ，问题编码 验证是否有效存在
+        String httpUrlFromCookie = null;
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie :cookies){
+           switch (cookie.getName()){
+               case "referer_full":
+                   httpUrlFromCookie = cookie.getValue();
+                   break;
+               default:
+                       break;
+           }
+        }
+        if(httpUrlFromCookie == null){
+            throw new InvalidAuthorizationException("获取授权信息失败，请重新点击链接登陆！");
+        }
         JSONObject jsonObject = JSONObject.fromObject(strangerDTO);
+        httpUrlFromCookie = URLDecoder.decode(httpUrlFromCookie);
+        strangerDTO.setHttpUrl(httpUrlFromCookie);
         JSONObject strangerDTOs = entityClient.getEntity("authorization-records/entity",jsonObject);
         if(strangerDTOs==null || strangerDTOs.size()==0){
-            throw new InvalidAuthorizationException("授权失败！");
+            throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");
         }
         //判断是否过期---获取过期时间
         String expirationTime = strangerDTOs.getString("expirationTime");
@@ -91,12 +112,18 @@ public class StrangerResource {
         if(date.isBefore(ZonedDateTime.now())){
             throw new InvalidAuthorizationException("授权已过期，请联系系统管理员！");
         }
+        Long authId = strangerDTOs.getLong("id");
         Long sendRecordId = strangerDTOs.getLong("sendRecordId");
         String name = strangerDTOs.getString("strangerName");
         String strangerName = ToPinyin(name);
+        strangerName = strangerName+strangerDTO.getAuthorizationCode();
         //验证是否已经生成User,无，则生成User
         User existingUser =  userRepository.findOneByEmailAndRegisterSource(strangerDTO.getStrangerEmail(), Constants.REGISTER_SOURCE_STRANGER);
-
+        //验证username是否已经存在，如果存在 new 一个新的user
+        User user = userRepository.findOneByLogin(strangerName).orElse(null);
+        if(user!=null){
+            strangerName = strangerDTO.getStrangerEmail();
+        }
         if(existingUser==null){
             UserDTO userDTO = new UserDTO();
             userDTO.setEmail(strangerDTO.getStrangerEmail());
@@ -114,12 +141,12 @@ public class StrangerResource {
                 new UsernamePasswordAuthenticationToken(existingUser.getLogin(), "user");
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, false);
+        String jwt = tokenProvider.createTokenWithParams(authentication, false,authId);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
         strangerDTO.setIdToken("Bearer " + jwt);
         strangerDTO.setSendRecordId(sendRecordId);
+        strangerDTO.setHttpUrl(httpUrlFromCookie);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(strangerDTO));
     }
 

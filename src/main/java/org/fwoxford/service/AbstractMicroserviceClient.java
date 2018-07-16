@@ -39,6 +39,7 @@ public abstract class AbstractMicroserviceClient<E> {
     abstract public Collection<E> findAll();
 
     abstract public E getOne(long id);
+    abstract public E findOne(long id,String url);
 
     abstract public E create(E object) throws JsonProcessingException;
 
