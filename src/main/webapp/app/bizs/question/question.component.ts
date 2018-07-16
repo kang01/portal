@@ -61,7 +61,7 @@ export class QuestionComponent implements OnInit {
                 const questionInfo = new Buffer(data.q, 'base64').toString();
                 this.msgToChild = questionInfo;
                 this.selectedIndex = 1;
-                const str = 'referer_full=' + location.href;
+                const str = 'referer_full=' + encodeURIComponent(location.href);
                 document.cookie = str;
             }
         });

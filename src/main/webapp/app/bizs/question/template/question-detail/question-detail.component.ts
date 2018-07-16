@@ -65,41 +65,58 @@ export class QuestionDetailComponent implements OnInit {
     }
     // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
     queryQuestionDesc() {
-        const storageQuestion = this.storage.retrieve('questionDetail');
-        if (!storageQuestion) {
-            this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
-                this.questionDetail = data;
-                this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
-                this.questionDetail.questionItemDTOList.forEach( (item) => {
-                    this.selected[item.id] = {};
-                    this.selectAll[item.id] = false;
-                    item.questionItemDetailsDTOS.forEach((item1) => {
-                        this.selected[item.id][item1.id] = false;
-                        item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
-                    });
-                });
-                if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
-                    this.initExpirationTime(this.questionDetail.expirationTime);
-                }
-                // 给父层广播状态，来判断是否显示完成按钮
-                this.outer.emit(this.questionDetail.status);
-            });
-        }else {
-            this.questionDetail = storageQuestion;
+        this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
+            this.questionDetail = data;
             this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
-                this.questionDetail.questionItemDTOList.forEach( (item) => {
-                    this.selected[item.id] = {};
-                    this.selectAll[item.id] = false;
-                    item.questionItemDetailsDTOS.forEach((item1) => {
-                        this.selected[item.id][item1.id] = false;
-                        item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
-                    });
+            this.questionDetail.questionItemDTOList.forEach( (item) => {
+                this.selected[item.id] = {};
+                this.selectAll[item.id] = false;
+                item.questionItemDetailsDTOS.forEach((item1) => {
+                    this.selected[item.id][item1.id] = false;
+                    item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
                 });
+            });
             if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
                 this.initExpirationTime(this.questionDetail.expirationTime);
             }
+            // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);
-        }
+        });
+        // const storageQuestion = this.storage.retrieve('questionDetail');
+        // if (!storageQuestion) {
+        //     this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
+        //         this.questionDetail = data;
+        //         this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
+        //         this.questionDetail.questionItemDTOList.forEach( (item) => {
+        //             this.selected[item.id] = {};
+        //             this.selectAll[item.id] = false;
+        //             item.questionItemDetailsDTOS.forEach((item1) => {
+        //                 this.selected[item.id][item1.id] = false;
+        //                 item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
+        //             });
+        //         });
+        //         if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
+        //             this.initExpirationTime(this.questionDetail.expirationTime);
+        //         }
+        //         // 给父层广播状态，来判断是否显示完成按钮
+        //         this.outer.emit(this.questionDetail.status);
+        //     });
+        // }else {
+        //     this.questionDetail = storageQuestion;
+        //     this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
+        //         this.questionDetail.questionItemDTOList.forEach( (item) => {
+        //             this.selected[item.id] = {};
+        //             this.selectAll[item.id] = false;
+        //             item.questionItemDetailsDTOS.forEach((item1) => {
+        //                 this.selected[item.id][item1.id] = false;
+        //                 item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
+        //             });
+        //         });
+        //     if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
+        //         this.initExpirationTime(this.questionDetail.expirationTime);
+        //     }
+        //     this.outer.emit(this.questionDetail.status);
+        // }
     }
     toggleAll(selectAll, selectedItems) {
         for (const id in selectedItems) {
@@ -143,7 +160,7 @@ export class QuestionDetailComponent implements OnInit {
                         }
                     });
                 });
-                this.storage.store('questionDetail', this.questionDetail);
+                // this.storage.store('questionDetail', this.questionDetail);
                 // console.log(JSON.stringify(this.questionDetail));
             });
         }else {
@@ -160,7 +177,7 @@ export class QuestionDetailComponent implements OnInit {
             item1.handleTypeCode = result.handleTypeCode;
             item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
             item1.replyContent = result.replyContent;
-            this.storage.store('questionDetail', this.questionDetail);
+            // this.storage.store('questionDetail', this.questionDetail);
         }, (reason) => {});
     }
     // 保存回复得问题内容 请参见样本回复。
