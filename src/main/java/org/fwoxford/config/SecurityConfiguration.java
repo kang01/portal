@@ -3,12 +3,14 @@ package org.fwoxford.config;
 import org.fwoxford.security.*;
 import org.fwoxford.security.jwt.*;
 
+import org.fwoxford.service.EntityClient;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -41,7 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,TokenProvider tokenProvider,CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
+    public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
+                                  TokenProvider tokenProvider, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
@@ -59,7 +62,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             throw new BeanInitializationException("Security configuration failed", e);
         }
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -108,10 +110,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
         .and()
-            .apply(securityConfigurerAdapter());
+            .apply(securityConfigurerAdapter())
+        .and()
+            .apply(authorizationConfiguerAdapter());
 
     }
-
+    private AuthorizationConfigurer authorizationConfiguerAdapter() {
+        return new AuthorizationConfigurer(tokenProvider);
+    }
     private JWTConfigurer securityConfigurerAdapter() {
         return new JWTConfigurer(tokenProvider);
     }

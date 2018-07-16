@@ -2,6 +2,7 @@ package org.fwoxford.security.jwt;
 
 import org.fwoxford.security.AuthoritiesConstants;
 import io.github.jhipster.config.JHipsterProperties;
+import org.fwoxford.service.EntityClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JWTFilterTest {
 
     private TokenProvider tokenProvider;
+    private EntityClient entityClient;
 
     private JWTFilter jwtFilter;
 
     @Before
     public void setup() {
         JHipsterProperties jHipsterProperties = new JHipsterProperties();
-        tokenProvider = new TokenProvider(jHipsterProperties);
+        tokenProvider = new TokenProvider(jHipsterProperties,entityClient);
         ReflectionTestUtils.setField(tokenProvider, "secretKey", "test secret");
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", 60000);
         jwtFilter = new JWTFilter(tokenProvider);

@@ -4,6 +4,7 @@ import org.fwoxford.security.AuthoritiesConstants;
 import io.github.jhipster.config.JHipsterProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.fwoxford.service.EntityClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -25,11 +26,12 @@ public class TokenProviderTest {
     private final long ONE_MINUTE = 60000;
     private JHipsterProperties jHipsterProperties;
     private TokenProvider tokenProvider;
+    private EntityClient entityClient;
 
     @Before
     public void setup() {
         jHipsterProperties = Mockito.mock(JHipsterProperties.class);
-        tokenProvider = new TokenProvider(jHipsterProperties);
+        tokenProvider = new TokenProvider(jHipsterProperties,entityClient);
         ReflectionTestUtils.setField(tokenProvider, "secretKey", secretKey);
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", ONE_MINUTE);
     }

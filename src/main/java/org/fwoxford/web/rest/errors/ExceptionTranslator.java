@@ -49,7 +49,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorVM processAccessDeniedException(AccessDeniedException e) {
-        return new ErrorVM(ErrorConstants.ERR_ACCESS_DENIED, e.getMessage());
+        return new ErrorVM(e.getMessage(),ErrorConstants.ERR_ACCESS_DENIED);
     }
 
     private ErrorVM processFieldErrors(List<FieldError> fieldErrors) {
