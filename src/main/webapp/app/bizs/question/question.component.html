@@ -19,7 +19,6 @@
             <!-- (outerInfo)="receiveAccredit($event)" -->
             <jhi-question-accredit #child1 *ngIf="selectedIndex == 1" [questionInfo]="msgToChild"></jhi-question-accredit>
             <jhi-question-detail #child2 *ngIf="selectedIndex == 2" [sendRecordId]="msgToChildSendRecordId" (outer)="receive($event)"></jhi-question-detail>
-            <jhi-question-history #child3 *ngIf="selectedIndex == 3"></jhi-question-history>
         </div>
 
     </div>

@@ -28,7 +28,7 @@ export class QuestionComponent implements OnInit {
     authorizationRecord: AuthorizationRecord;
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
     ) {}
 
     ngOnInit() {
@@ -56,8 +56,6 @@ export class QuestionComponent implements OnInit {
                 const questionInfo = new Buffer(data.q, 'base64').toString();
                 this.msgToChild = questionInfo;
                 this.selectedIndex = 1;
-                const str = 'referer_full=' + encodeURIComponent(location.href);
-                document.cookie = str;
             }
         });
     }

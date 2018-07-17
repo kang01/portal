@@ -8,6 +8,7 @@ import { QuestionService } from './../../question.service';
     templateUrl: './question-accredit.component.html',
     styles: [`
         .pl-10{padding-left:10px;}
+        .pr-10{padding-right:10px;}
         .mt-10{margin-top:10px;}
     `]
 })
@@ -32,7 +33,6 @@ export class QuestionAccreditComponent implements OnInit {
         this.questionNo = infoArray[1];
         this.questionEmail = infoArray[2];
         this.receivePerson = infoArray[3];
-        this.pathName = location.href;
     }
     verification() {
         return new Promise((resolve, reject) => {
@@ -43,9 +43,11 @@ export class QuestionAccreditComponent implements OnInit {
                 const obj = {
                     'strangerEmail': this.questionEmail,
                     'authorizationCode': this.questionAccreditNo,
-                    'httpUrl': this.pathName,
+                    'httpUrl': location.href,
                     'questionCode': this.questionNo
                 };
+                const str = 'referer_full=' + encodeURIComponent(location.href);
+                document.cookie = str;
                 this.questionService.strangerLogin(obj).subscribe((data) => {
                     resolve(data);
                 }, (err) => {

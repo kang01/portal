@@ -13,9 +13,7 @@ import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import {
     QuestionAccreditComponent,
     QuestionDetailComponent,
-    QuestionHistoryComponent,
     QuestionDetailModalComponent,
-    QuestionHistoryDescModalComponent,
     QuestionService,
     CommonService,
     PromptModalComponent
@@ -46,14 +44,11 @@ import {
         QuestionComponent,
         QuestionAccreditComponent,
         QuestionDetailComponent,
-        QuestionHistoryComponent,
         QuestionDetailModalComponent,
-        QuestionHistoryDescModalComponent,
         PromptModalComponent
     ],
     entryComponents: [
         QuestionDetailModalComponent,
-        QuestionHistoryDescModalComponent,
         PromptModalComponent
     ],
     providers: [

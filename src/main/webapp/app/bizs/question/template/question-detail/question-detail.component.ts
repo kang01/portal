@@ -23,7 +23,6 @@ export class QuestionDetailComponent implements OnInit {
     usedTime: string; // 剩余时间
     expirationTimer: any; // 剩余时间Timer
     questionTypeName: string; // 样本问题类型
-    // sendRecordId = '144';
     @Input() private sendRecordId: any;
     constructor(
         private modalService: NgbModal,
@@ -82,41 +81,6 @@ export class QuestionDetailComponent implements OnInit {
             // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);
         });
-        // const storageQuestion = this.storage.retrieve('questionDetail');
-        // if (!storageQuestion) {
-        //     this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
-        //         this.questionDetail = data;
-        //         this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
-        //         this.questionDetail.questionItemDTOList.forEach( (item) => {
-        //             this.selected[item.id] = {};
-        //             this.selectAll[item.id] = false;
-        //             item.questionItemDetailsDTOS.forEach((item1) => {
-        //                 this.selected[item.id][item1.id] = false;
-        //                 item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
-        //             });
-        //         });
-        //         if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
-        //             this.initExpirationTime(this.questionDetail.expirationTime);
-        //         }
-        //         // 给父层广播状态，来判断是否显示完成按钮
-        //         this.outer.emit(this.questionDetail.status);
-        //     });
-        // }else {
-        //     this.questionDetail = storageQuestion;
-        //     this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
-        //         this.questionDetail.questionItemDTOList.forEach( (item) => {
-        //             this.selected[item.id] = {};
-        //             this.selectAll[item.id] = false;
-        //             item.questionItemDetailsDTOS.forEach((item1) => {
-        //                 this.selected[item.id][item1.id] = false;
-        //                 item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
-        //             });
-        //         });
-        //     if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
-        //         this.initExpirationTime(this.questionDetail.expirationTime);
-        //     }
-        //     this.outer.emit(this.questionDetail.status);
-        // }
     }
     toggleAll(selectAll, selectedItems) {
         for (const id in selectedItems) {
@@ -181,15 +145,13 @@ export class QuestionDetailComponent implements OnInit {
         }, (reason) => {});
     }
     // 保存回复得问题内容 请参见样本回复。
-    saveReplyQuestion(replyQuestionObj, callback?) {
-        const cb = callback || function() {};
+    saveReplyQuestion(replyQuestionObj) {
         return new Promise((resolve, reject) => {
             this.questionService.saveReplyQuestion(replyQuestionObj).subscribe((data) => {
                 resolve(data);
-                return cb();
             }, (err) => {
+                this.toastr.error(err.message);
                 reject(err);
-                return cb(err);
             });
         });
 
@@ -216,13 +178,13 @@ export class QuestionDetailComponent implements OnInit {
                     replyContent: null,
                     questionItemDetailsId: null
                 };
-                // if (item1.handleTypeCode) {
+                if (item1.handleTypeCode) {
                     obj.id = item1.replyDetailsId;
                     obj.handleTypeCode = item1.handleTypeCode;
                     obj.replyContent = item1.replyContent;
                     obj.questionItemDetailsId = item1.id;
                     questionArray.push(obj);
-                // }
+                }
             });
         });
         // 样本问题2301  其他问题2302
