@@ -146,11 +146,33 @@ export class QuestionDetailComponent implements OnInit {
     }
     // 保存回复得问题内容 请参见样本回复。
     saveReplyQuestion(replyQuestionObj) {
+        const obj = {
+            sendRecordId: replyQuestionObj.sendRecordId,
+            replyContent: replyQuestionObj.replyContent,
+            replyDetailsDTOList: []
+        };
+
+        replyQuestionObj.replyDetailsDTOList.forEach((sample) => {
+            if (sample.handleTypeCode) {
+                obj.replyDetailsDTOList.push(sample);
+            }
+        });
         return new Promise((resolve, reject) => {
-            this.questionService.saveReplyQuestion(replyQuestionObj).subscribe((data) => {
+            this.questionService.saveReplyQuestion(obj).subscribe((data) => {
+                // this.questionReplyResponse = data;
+                this.questionDetail.questionItemDTOList.forEach( (item) => {
+                    item.questionItemDetailsDTOS.forEach((item1) => {
+                        data.replyDetailsDTOList.forEach((reply) => {
+                            if (item1.id === reply.questionItemDetailsId) {
+                                item1.replyDetailsId = reply.id;
+                            }
+                        });
+
+                    });
+                });
                 resolve(data);
             }, (err) => {
-                this.toastr.error(err.message);
+                this.toastr.error(err.error.message);
                 reject(err);
             });
         });
@@ -178,13 +200,13 @@ export class QuestionDetailComponent implements OnInit {
                     replyContent: null,
                     questionItemDetailsId: null
                 };
-                if (item1.handleTypeCode) {
+                // if (item1.handleTypeCode) {
                     obj.id = item1.replyDetailsId;
                     obj.handleTypeCode = item1.handleTypeCode;
                     obj.replyContent = item1.replyContent;
                     obj.questionItemDetailsId = item1.id;
                     questionArray.push(obj);
-                }
+                // }
             });
         });
         // 样本问题2301  其他问题2302

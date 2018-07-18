@@ -5,6 +5,7 @@ import { API_HOST_QUESTION, API_HOST_NO_MIS_QUESTION } from '../../app.constants
 import { Observable } from 'rxjs/Observable';
 import { QuestionDetail } from '..';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
+import { QuestionReplyResponse } from './questionReplyResponse.model';
 @Injectable()
 export class QuestionService {
 
@@ -16,8 +17,8 @@ export class QuestionService {
   queryQuestionDesc(recordId: string): Observable<QuestionDetail> {
     return this.http.get<QuestionDetail>( API_HOST_QUESTION + '/question/reply-records/sendRecord/' + recordId);
   }
-  saveReplyQuestion(replyItem): Observable<HttpResponse<any>> {
-    return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord', replyItem, { observe: 'response' });
+  saveReplyQuestion(replyItem): Observable<QuestionReplyResponse> {
+    return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord', replyItem);
   }
   finishReplyQuestion(recordId: string): Observable<any> {
     return this.http.put(API_HOST_QUESTION + '/reply-records/sendRecord/' + recordId + '/completed', { observe: 'response' });
