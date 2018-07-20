@@ -7,11 +7,26 @@ export const QuestionRoute: Route = {
     path: 'question-management',
     component: QuestionComponent,
     children: [
-        {path: 'question-accredit', component: QuestionAccreditComponent},
-        {path: 'question-detail', component: QuestionDetailComponent},
+        {
+            path: 'question-accredit',
+            component: QuestionAccreditComponent,
+            data: {
+                pageTitle: 'question.home.title'
+            }
+        } ,
+        {
+            path: 'question-detail',
+            component: QuestionDetailComponent,
+            data: {
+                pageTitle: 'question.home.title'
+            }
+        },
         // 默认加载的路由
         { path: '', redirectTo: 'question-accredit', pathMatch: 'full' },
         // 匹配不到跳到首页
         { path: '**', redirectTo: 'question-accredit' }
-    ]
+    ],
+    data: {
+        pageTitle: 'question.home.title'
+    }
 };

@@ -4,8 +4,9 @@
             <i class="fa fa-bars"></i>
         </a>
         <span class="navbar-brand logo float-left">
-            <span class="logo-img"></span>
-        <span jhiTranslate="global.title" class="navbar-title">GwBbisStrangerPortal</span>
+            <span class="logo-img" src="./../../../content/images/LOGO.svg" alt="logo"></span>
+        <!-- <span jhiTranslate="question.home.title" class="navbar-title">问题回复</span> -->
+        <span jhiTranslate="global.title" class="navbar-title">NCBBC Stranger Portal</span> <span class="navbar-version">{{version}}</span>
         </span>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
