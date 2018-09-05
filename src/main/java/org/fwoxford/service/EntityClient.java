@@ -1,6 +1,7 @@
 package org.fwoxford.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.sf.json.JSONObject;
+import org.fwoxford.security.SecurityUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by gengluying on 2018/7/5.
@@ -21,10 +23,14 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
 
 
     @Override
-    public Collection<JSONObject> findAll() {
+    public Collection<JSONObject> findAll(String jwt) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
+        String token = SecurityUtils.getCurrentUserJWT().orElse(jwt);
+        if (token != null){
+            headers.set("Authorization","Bearer " + token);
+        }
+//        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
         String url = getUrl("questions");
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<JSONObject[]> result = restTemplate.exchange(url,HttpMethod.GET,entity, JSONObject[].class);
@@ -39,11 +45,15 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
     }
 
     @Override
-    public JSONObject findOne(long id, String url) {
+    public JSONObject findOne(long id, String url, String jwt) {
         String uri = getUrl(url, id);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
+        String token = SecurityUtils.getCurrentUserJWT().orElse(jwt);
+        if (token != null){
+            headers.set("Authorization","Bearer " + token);
+        }
+//        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<JSONObject> responseEntity = restTemplate.exchange(uri,HttpMethod.GET,entity, JSONObject.class);
         return responseEntity.getBody();
@@ -77,10 +87,10 @@ public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
 
         return responseEntity.getBody();
     }
-
-    public JSONObject queryOne(Long id, String url) {
-        String uri = getUrl(url, id);
-        JSONObject jsonObject = restTemplate.getForObject(uri,JSONObject.class);
-        return jsonObject;
-    }
+//
+//    public JSONObject queryOne(Long id, String url) {
+//        String uri = getUrl(url, id);
+//        JSONObject jsonObject = restTemplate.getForObject(uri,JSONObject.class);
+//        return jsonObject;
+//    }
 }

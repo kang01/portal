@@ -45,23 +45,24 @@ public class AuthorizationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
         if(StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)){
-            String httpUrl = null;
-            Cookie[] cookies = httpServletRequest.getCookies();
-            if(cookies==null){
-                throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");
-            }
-            for(Cookie cookie :cookies){
-                switch (cookie.getName()){
-                    case "referer_full":
-                        httpUrl = URLDecoder.decode(cookie.getValue());
-                        break;
-                    default:
-                        break;
-                }
-            }
+            String httpUrl = httpServletRequest.getHeader("referer_full");
+//            Cookie[] cookies = httpServletRequest.getCookies();
+//            if(cookies==null){
+//                throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");
+//            }
+//            for(Cookie cookie :cookies){
+//                switch (cookie.getName()){
+//                    case "referer_full":
+//                        httpUrl = URLDecoder.decode(cookie.getValue());
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
             if(httpUrl == null){
                 throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");
             }else{
+                httpUrl = URLDecoder.decode(httpUrl);
                 String secretKey =  tokenProvider.getSecretKey();
                 Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
@@ -71,7 +72,7 @@ public class AuthorizationFilter extends GenericFilterBean {
                 if(authId == null){
                     throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");
                 }
-                JSONObject jsonObject = tokenProvider.queryOne(Long.valueOf(authId.toString()),"authorization-records");
+                JSONObject jsonObject = tokenProvider.queryOne(Long.valueOf(authId.toString()),"authorization-records", jwt);
                 String authHttpUrl  = jsonObject.getString("httpUrl");
                 if(!authHttpUrl.equals(httpUrl)){
                     throw new InvalidAuthorizationException("授权失败，请联系系统管理员！");

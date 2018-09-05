@@ -134,7 +134,7 @@ public class TokenProvider {
         return false;
     }
 
-    public JSONObject queryOne(Long aLong, String s) {
-        return entityClient.findOne(aLong,s);
+    public JSONObject queryOne(Long aLong, String s, String jwt) {
+        return entityClient.findOne(aLong,s,jwt);
     }
 }

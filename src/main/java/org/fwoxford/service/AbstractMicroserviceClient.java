@@ -2,6 +2,7 @@ package org.fwoxford.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fwoxford.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by gengluying on 2018/7/5.
@@ -36,10 +38,10 @@ public abstract class AbstractMicroserviceClient<E> {
         this.serviceName = serviceName.toUpperCase();
     }
 
-    abstract public Collection<E> findAll();
+    abstract public Collection<E> findAll(String jwt);
 
     abstract public E getOne(long id);
-    abstract public E findOne(long id,String url);
+    abstract public E findOne(long id,String url, String jwt);
 
     abstract public E create(E object) throws JsonProcessingException;
 
@@ -108,7 +110,10 @@ public abstract class AbstractMicroserviceClient<E> {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String entityJson = mapper.writeValueAsString(entity);
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization","Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfTUFOQUdFUixST0xFX1VTRVIiLCJleHAiOjE1MzMyODQ5NTl9.DeL8ExCYHVLu7KsFH52x1ySsc7ciDItoAB1ONbE-VTXAHAYF7Zv2TVxiP2SG4Pmn5LEFhIK4qhzguamhjvuHhA");
+        Optional<String> token = SecurityUtils.getCurrentUserJWT();
+        if (token.isPresent()){
+            headers.set("Authorization","Bearer " + token.orElse(""));
+        }
         return new HttpEntity<>(entityJson, headers);
     }
 }

@@ -85,17 +85,22 @@ public class StrangerResource {
     public ResponseEntity<StrangerDTO> createUser(@Valid @RequestBody StrangerDTO strangerDTO, HttpServletRequest request) throws URISyntaxException, JsonProcessingException {
         log.debug("REST request to check strangerDTO : {}", strangerDTO);
         //用邮箱，授权码，HttpUrl ，问题编码 验证是否有效存在
-        String httpUrlFromCookie = null;
-        Cookie[] cookies = request.getCookies();
-        for(Cookie cookie :cookies){
-           switch (cookie.getName()){
-               case "referer_full":
-                   httpUrlFromCookie = cookie.getValue();
-                   break;
-               default:
-                       break;
-           }
-        }
+        String httpUrlFromCookie = request.getHeader("referer_full");
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies == null || cookies.length == 0){
+//            httpUrlFromCookie = null
+//        } else {
+//            for(Cookie cookie :cookies){
+//                switch (cookie.getName()){
+//                    case "referer_full":
+//                        httpUrlFromCookie = cookie.getValue();
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//        }
+
         if(httpUrlFromCookie == null){
             throw new InvalidAuthorizationException("获取授权信息失败，请重新点击链接登陆！");
         }
