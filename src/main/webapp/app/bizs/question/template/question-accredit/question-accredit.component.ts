@@ -48,6 +48,8 @@ export class QuestionAccreditComponent implements OnInit {
                 };
                 const str = 'referer_full=' + encodeURIComponent(location.href);
                 document.cookie = str;
+                const headers = new Headers;
+                headers.append('Cookies', str);
                 this.questionService.strangerLogin(obj).subscribe((data) => {
                     resolve(data);
                 }, (err) => {

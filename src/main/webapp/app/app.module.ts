@@ -6,6 +6,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Ng2Webstorage, LocalStorageService, SessionStorageService  } from 'ngx-webstorage';
 import { JhiEventManager } from 'ng-jhipster';
 
+import { PortalInterceptor } from './blocks/interceptor/portal.interceptor';
 import { AuthInterceptor } from './blocks/interceptor/auth.interceptor';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
@@ -88,7 +89,16 @@ import {
             deps: [
                 Injector
             ]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: PortalInterceptor,
+            multi: true,
+            deps: [
+                Injector
+            ]
         }
+
     ],
     bootstrap: [ JhiMainComponent ]
 })
