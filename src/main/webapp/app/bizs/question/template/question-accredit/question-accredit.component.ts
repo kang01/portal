@@ -46,10 +46,8 @@ export class QuestionAccreditComponent implements OnInit {
                     'httpUrl': location.href,
                     'questionCode': this.questionNo
                 };
-                const str = 'referer_full=' + encodeURIComponent(location.href);
+                const str = 'login_full=' + encodeURIComponent(location.href);
                 document.cookie = str;
-                const headers = new Headers;
-                headers.append('Cookies', str);
                 this.questionService.strangerLogin(obj).subscribe((data) => {
                     resolve(data);
                 }, (err) => {

@@ -11,14 +11,16 @@ export const QuestionRoute: Route = {
             path: 'question-accredit',
             component: QuestionAccreditComponent,
             data: {
-                pageTitle: 'question.home.title'
+                pageTitle: 'question.home.title',
+                authorities: []
             }
         } ,
         {
             path: 'question-detail',
             component: QuestionDetailComponent,
             data: {
-                pageTitle: 'question.home.title'
+                pageTitle: 'question.home.title',
+                authorities: []
             }
         },
         // 默认加载的路由

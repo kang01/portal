@@ -80,6 +80,8 @@ export class QuestionDetailComponent implements OnInit {
             }
             // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);
+        }, (err) => {
+            this.toastr.error(err.error.message);
         });
     }
     toggleAll(selectAll, selectedItems) {
@@ -124,8 +126,7 @@ export class QuestionDetailComponent implements OnInit {
                         }
                     });
                 });
-                // this.storage.store('questionDetail', this.questionDetail);
-                // console.log(JSON.stringify(this.questionDetail));
+
             });
         }else {
             this.toastr.error('请选择要回复的问题！');

@@ -7,7 +7,10 @@ const BIZS_ROUTES = [
 export const BizState: Routes = [
 {
     path: '',
-    children: BIZS_ROUTES
+    children: BIZS_ROUTES,
+    data: {
+        authorities: []
+    }
 }
 ];
 

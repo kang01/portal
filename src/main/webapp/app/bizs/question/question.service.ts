@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { API_HOST_QUESTION, API_HOST_NO_MIS_QUESTION } from '../../app.constants';
+import { API_HOST_QUESTION, API_HOST } from '../../app.constants';
 import { Observable } from 'rxjs/Observable';
 import { QuestionDetail } from '..';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
@@ -27,7 +27,7 @@ export class QuestionService {
     return this.http.put(API_HOST_QUESTION + '/send-records/' + recordId + '/increase-time', { observe: 'response' });
   }
   strangerLogin(loginInfo): Observable<any> {
-    return this.http.post(API_HOST_NO_MIS_QUESTION + '/stranger/login', loginInfo, { observe: 'response' }).map(this.authenticateSuccess.bind(this));
+    return this.http.post(API_HOST + '/stranger/login', loginInfo, { observe: 'response' }).map(this.authenticateSuccess.bind(this));
   }
   authenticateSuccess(resp) {
     const bearerToken = resp.body.idToken;

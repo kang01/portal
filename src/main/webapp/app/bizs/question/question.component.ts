@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { QuestionDetailComponent } from './template/question-detail/question-detail.component';
 import { QuestionAccreditComponent } from './template/question-accredit/question-accredit.component';
 import { AuthorizationRecord } from './authorizationRecord.model';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'jhi-question',
   templateUrl: './question.component.html',
@@ -29,11 +30,12 @@ export class QuestionComponent implements OnInit {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
-        this.changeContentHeight();
         this.queryUrlInfo();
+        this.changeContentHeight();
         setTimeout(() => {
             this.changeTitle();
         }, 800);
