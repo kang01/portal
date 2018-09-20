@@ -1,7 +1,9 @@
 package org.fwoxford.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.sf.json.JSONObject;
+import org.fwoxford.config.Constants;
 import org.fwoxford.security.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,8 @@ import java.util.Optional;
 @Service
 public class EntityClient extends AbstractMicroserviceClient<JSONObject> {
     public EntityClient(){
-        super("misbbisquestion");
+        super(Constants.SERVICE_NAME_QUESTION);
     }
-
 
 
     @Override

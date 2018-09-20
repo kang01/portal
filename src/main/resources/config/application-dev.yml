@@ -39,8 +39,11 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
+#        url: jdbc:oracle:thin:@10.24.10.247:1521:xe
+#        username: biobank_p_20171020
+#        password: eyuXotN6
         url: jdbc:oracle:thin:@10.24.10.56:1521:orcl
-        username: C##biobank_t_20180808
+        username: C##biobank_t_20180912
         password: root123
     jpa:
         database-platform: org.hibernate.dialect.Oracle12cDialect
@@ -135,7 +138,7 @@ jhipster:
                 token-validity-in-seconds-for-remember-me: 2592000
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: GwBbisStrangerPortal@localhost
-        base-url: http://127.0.0.1:8081
+        base-url: http://127.0.0.1:8082
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite: # Use the "graphite" Maven profile to have the Graphite dependencies

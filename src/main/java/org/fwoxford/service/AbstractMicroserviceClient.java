@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +24,7 @@ import java.util.Optional;
 public abstract class AbstractMicroserviceClient<E> {
     private String serviceName;
 
-    @Inject
+    @Autowired
     protected ObjectMapper mapper;
 
 
@@ -73,14 +72,17 @@ public abstract class AbstractMicroserviceClient<E> {
      */
     protected String getUrl(String path) {
         String url;
-        ServiceInstance instance = loadBalancerClient.choose(serviceName);
-        String prefix = instance.isSecure() ? "https://" : "http://";
+//        ServiceInstance instance = loadBalancerClient.choose(serviceName);
+//        String prefix = instance.isSecure() ? "https://" : "http://";
 
-        url = prefix + instance.getHost() + ":" + instance.getPort() + "/api/" + path;
+//        url = prefix + instance.getHost() + ":" + instance.getPort() + "/api/" + path;
+        url = eurekaApiService.queryInstanceHomePageUrl(serviceName) + "api/" + path;
 
 
         return url;
     }
+    @Autowired
+    private EurekaApiService eurekaApiService;
 
     /**
      * Helper method, because getUrl("resource", 1) is cooler than getUrl("resource/" + 1)
@@ -93,7 +95,7 @@ public abstract class AbstractMicroserviceClient<E> {
         return getUrl(path + "/" + id);
     }
 
-    @Inject
+    @Autowired
     public void setRestTemplate(RestOperations restTemplate) {
         this.restTemplate = restTemplate;
     }

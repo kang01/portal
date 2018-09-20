@@ -13,6 +13,9 @@ public final class Constants {
     public static final String DEFAULT_LANGUAGE = "zh-cn";
     //注册来源：102 陌生人登录时创建的
     public static final String REGISTER_SOURCE_STRANGER = "102";
+
+    public static final String SERVICE_NAME_QUESTION = "misbbisquestion";
+
     private Constants() {
     }
 

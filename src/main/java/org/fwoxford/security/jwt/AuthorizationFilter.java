@@ -3,17 +3,12 @@ package org.fwoxford.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import net.sf.json.JSONObject;
-import org.fwoxford.service.EntityClient;
 import org.fwoxford.web.rest.errors.InvalidAuthorizationException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
 
