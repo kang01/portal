@@ -14,14 +14,15 @@
         <span class="f-w">问题详情</span>：
         <br> {{questionDetail.questionDescription}}
     </p>
-    <p *ngIf="questionDetail.status !== '2401' && questionDetail.status !== '2402'">
+    <p *ngIf="!statusFlag">
         <span class="f-w">问题回复</span>：{{questionDetail.replyContent}}
     </p>
-    <div style="position: absolute;top:-5px;right: 20px;" *ngIf="questionDetail.status === '2401' || this.questionDetail.status === '2402'">
+    <div style="position: absolute;top:-5px;right: 20px;" *ngIf="statusFlag">
         <span class="f-w red-color" style="display: inline-block;vertical-align: middle;">{{usedTime}}后过期</span>
         <button class="btn btn-sm btn-secondary " (click)="increaseTime()">申请加时</button>
     </div>
-    <form *ngIf="questionDetail.questionTypeCode == '2302' && (questionDetail.status === '2401' || questionDetail.status === '2402')">
+    <!--2302:其他问题-->
+    <form [hidden] ="questionDetail.questionTypeCode !== '2302'">
         <hr>
         <div class="form-group">
             <label class="f-w">问题回复</label>
@@ -36,7 +37,8 @@
                 <a class="text-ellipsis pull-left" style="width:80%;margin-top: 4px;margin-bottom:4px;" title="{{item.questionDescription}}">{{item.questionDescription}}</a>
 
                 <div class="pull-right" style="width:10%;">
-                    <button class="btn btn-ssm btn-primary pull-right" *ngIf="questionDetail.status === '2401'" (click)="replyQuestionModal($event,item)">批量回复</button>
+                    <button class="btn btn-ssm btn-primary pull-right"
+                            [hidden]="(questionDetail.status === '2403'|| questionDetail.status === '2404')" (click)="replyQuestionModal($event,item)">批量回复</button>
                 </div>
                 <div class="pull-right text-right" style="width:10%;margin-top: 5px">
                     共{{item.questionItemDetailsDTOS.length}}条数据
@@ -49,14 +51,17 @@
                     <thead>
                         <tr>
                             <th style="width:3%"><input type="checkbox" [(ngModel)]="selectAll[item.id]" (change)="toggleAll(selectAll[item.id],selected[item.id])"></th>
-                            <th style="width:10%">样本编码</th>
+                            <th style="width:6%">样本编码</th>
                             <th style="width:10%">样本类型</th>
                             <th style="width:5%">项目</th>
-                            <th style="width:10%">PID</th>
-                            <th style="width:10%">冻存盒</th>
+                            <th style="width:6%">项目点</th>
+                            <th style="width:9%">PID</th>
+                            <th style="width:9%">冻存盒</th>
+                            <th style="width:9%">一维编码</th>
+                            <th style="width:9%">接收盒子编码</th>
                             <th style="width:5%">孔位</th>
-                            <th style="width:10%">处理方式</th>
-                            <th style="width:32%">回复</th>
+                            <th style="width:9%">处理方式</th>
+                            <th style="width:auto">回复</th>
                             <th style="width:5%">操作</th>
                         </tr>
                     </thead>
@@ -66,12 +71,15 @@
                             <td>{{item1.sampleCode}}</td>
                             <td>{{item1.sampleClassificationName}}</td>
                             <td>{{item1.projectCode}}</td>
+                            <td>{{item1.projectSiteCode}}</td>
                             <td>{{item1.patientId}}</td>
                             <td>{{item1.frozenBoxCode}}</td>
+                            <td>{{item1.frozenBoxCode1D}}</td>
+                            <td>{{item1.receiveBoxCode}}</td>
                             <td>{{item1.tubeRows}}{{item1.tubeColumns}}</td>
                             <td>{{item1.handleTypeName}}</td>
                             <td>
-                                <div class="text-ellipsis" title="{{item1.replyContent}}" style="width:400px;height: 30px;line-height:30px;
+                                <div class="text-ellipsis" title="{{item1.replyContent}}" style="width:160px;height: 30px;line-height:30px;
                                 white-space:nowrap">{{item1.replyContent}}</div>
                             </td>
                             <!-- // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期 -->

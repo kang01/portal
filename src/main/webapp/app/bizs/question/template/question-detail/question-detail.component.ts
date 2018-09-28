@@ -24,6 +24,8 @@ export class QuestionDetailComponent implements OnInit {
     expirationTimer: any; // 剩余时间Timer
     questionTypeName: string; // 样本问题类型
     @Input() private sendRecordId: any;
+    statusFlag: boolean;
+    questionTypeCodeFlag: boolean;
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -75,8 +77,16 @@ export class QuestionDetailComponent implements OnInit {
                     item1.handleTypeName = this.commonSevice.getStatusName(item1.handleTypeCode);
                 });
             });
+            if (this.questionDetail.questionTypeCode === '2301') {
+                this.questionTypeCodeFlag = true;
+            }else {
+                this.questionTypeCodeFlag = false;
+            }
             if (this.questionDetail.status === '2401' || this.questionDetail.status === '2402') {
+                this.statusFlag = true;
                 this.initExpirationTime(this.questionDetail.expirationTime);
+            }else {
+                this.statusFlag = false;
             }
             // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);

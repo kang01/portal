@@ -15,7 +15,8 @@ export class QuestionService {
      private $sessionStorage: SessionStorageService) { }
 
   queryQuestionDesc(recordId: string): Observable<QuestionDetail> {
-    return this.http.get<QuestionDetail>( API_HOST_QUESTION + '/question/reply-records/sendRecord/' + recordId);
+    return this.http.get<QuestionDetail>( API_HOST_QUESTION + '/question/reply-records/sendRecord/' + recordId)
+        .map((res) => res as QuestionDetail);
   }
   saveReplyQuestion(replyItem): Observable<QuestionReplyResponse> {
     return this.http.post(API_HOST_QUESTION + '/reply-records/sendRecord', replyItem);

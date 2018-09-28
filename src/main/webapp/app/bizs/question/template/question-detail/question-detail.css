@@ -65,3 +65,4 @@ p {
     padding: 2px;
     font-size: 12px;
 }
+[hidden] { display: none !important;}

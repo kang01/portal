@@ -25,7 +25,7 @@
     <div class="card-footer">
         <div class="text-right">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-sm btn-secondary" (click)="preStep()">上一步</button>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="preStep()" *ngIf="selectedIndex != 1">上一步</button>
                 <button type="button" class="btn btn-sm btn-secondary" (click)="nextStep()" *ngIf="selectedIndex == 1">下一步</button>
             </div>
             <!-- 问题发送记录状态：2401：已发送，2402:回复中，2403: 已回复，2404:已过期 -->
