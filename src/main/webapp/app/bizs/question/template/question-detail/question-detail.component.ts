@@ -8,6 +8,7 @@ import { QuestionService } from './../../question.service';
 import { CommonService } from '../../../service/common.service';
 import { QuestionDetail } from '../../questionDetail.model';
 import { PromptModalComponent } from '../../../prompt-modal/prompt-modal.component';
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 @Component({
   selector: 'jhi-question-detail',
@@ -15,6 +16,7 @@ import * as _ from 'lodash';
   styleUrls: ['./question-detail.css']
 })
 export class QuestionDetailComponent implements OnInit {
+    @Input() private sendRecordId: any;
     @Output() private outer = new EventEmitter<string>();
     @BlockUI() blockUI: NgBlockUI;
     questionDetail: QuestionDetail;
@@ -23,9 +25,11 @@ export class QuestionDetailComponent implements OnInit {
     usedTime: string; // 剩余时间
     expirationTimer: any; // 剩余时间Timer
     questionTypeName: string; // 样本问题类型
-    @Input() private sendRecordId: any;
     statusFlag: boolean;
     questionTypeCodeFlag: boolean;
+    activeIds = [];
+    panelId: string;
+    nextState: boolean;
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -64,12 +68,23 @@ export class QuestionDetailComponent implements OnInit {
             this.usedTime = mins + '分钟';
         }
     }
+    beforeChange($event: NgbPanelChangeEvent) {
+        this.panelId = $event.panelId;
+        this.nextState = $event.nextState;
+        console.log($event.nextState);
+        console.log($event.panelId);
+    }
+    isOpen(i) {
+        console.log(i);
+        return true;
+    }
     // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
     queryQuestionDesc() {
         this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
             this.questionDetail = data;
             this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
-            this.questionDetail.questionItemDTOList.forEach( (item) => {
+            this.questionDetail.questionItemDTOList.forEach( (item, index) => {
+                this.activeIds.push('ngb-panel-' + index);
                 this.selected[item.id] = {};
                 this.selectAll[item.id] = false;
                 item.questionItemDetailsDTOS.forEach((item1) => {
@@ -88,6 +103,7 @@ export class QuestionDetailComponent implements OnInit {
             }else {
                 this.statusFlag = false;
             }
+            console.log(this.activeIds);
             // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);
         }, (err) => {
@@ -193,9 +209,6 @@ export class QuestionDetailComponent implements OnInit {
     finishReplyQuestion() {
         this.questionService.finishReplyQuestion(this.sendRecordId).subscribe((data) => {
             this.toastr.success('回复完成');
-            // const qInfo = this.storage.retrieve('questionDetail');
-            // qInfo.status = '2502';
-            // this.storage.store('questionDetail', qInfo);
             window.clearInterval(this.expirationTimer);
             this.queryQuestionDesc();
         });

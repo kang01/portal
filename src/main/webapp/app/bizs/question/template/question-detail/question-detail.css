@@ -55,6 +55,9 @@ p {
 .red-color {
     color: red;
 }
+.yellow-color {
+    color: #F0AD4E;
+}
 
 .reasize-none {
     resize: none;
