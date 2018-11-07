@@ -69,14 +69,9 @@ export class QuestionDetailComponent implements OnInit {
         }
     }
     beforeChange($event: NgbPanelChangeEvent) {
+        // console.log($event)
         this.panelId = $event.panelId;
         this.nextState = $event.nextState;
-        console.log($event.nextState);
-        console.log($event.panelId);
-    }
-    isOpen(i) {
-        console.log(i);
-        return true;
     }
     // 2401：已发送，2402:回复中，2403: 已回复，2404:已过期
     queryQuestionDesc() {
@@ -103,7 +98,6 @@ export class QuestionDetailComponent implements OnInit {
             }else {
                 this.statusFlag = false;
             }
-            console.log(this.activeIds);
             // 给父层广播状态，来判断是否显示完成按钮
             this.outer.emit(this.questionDetail.status);
         }, (err) => {
