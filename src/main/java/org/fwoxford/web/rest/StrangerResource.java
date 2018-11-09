@@ -119,7 +119,7 @@ public class StrangerResource {
         String strangerName = ToPinyin(name);
         strangerName = strangerName+strangerDTO.getAuthorizationCode();
         //验证是否已经生成User,无，则生成User
-        User existingUser =  userRepository.findOneByEmailAndRegisterSource(strangerDTO.getStrangerEmail(), Constants.REGISTER_SOURCE_STRANGER);
+        User existingUser =  userRepository.findOneByEmail(strangerDTO.getStrangerEmail());
         //验证username是否已经存在，如果存在 new 一个新的user
         User user = userRepository.findOneByLogin(strangerName).orElse(null);
         if(user!=null){
