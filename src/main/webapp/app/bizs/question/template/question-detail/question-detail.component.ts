@@ -30,6 +30,7 @@ export class QuestionDetailComponent implements OnInit {
     activeIds = [];
     panelId: string;
     nextState: boolean;
+    descHtml;
     constructor(
         private modalService: NgbModal,
         private toastr: ToastrService,
@@ -77,6 +78,7 @@ export class QuestionDetailComponent implements OnInit {
     queryQuestionDesc() {
         this.questionService.queryQuestionDesc(this.sendRecordId).subscribe((data) => {
             this.questionDetail = data;
+            $('.descHtml').html(data.questionDescription);
             this.questionTypeName = this.commonSevice.getStatusName(this.questionDetail.questionTypeCode);
             this.questionDetail.questionItemDTOList.forEach( (item, index) => {
                 this.activeIds.push('ngb-panel-' + index);
@@ -203,6 +205,9 @@ export class QuestionDetailComponent implements OnInit {
     finishReplyQuestion() {
         this.questionService.finishReplyQuestion(this.sendRecordId).subscribe((data) => {
             this.toastr.success('回复完成');
+            this.questionDetail.questionItemDTOList.forEach( (item, index) => {
+                this.activeIds.push('ngb-panel-' + index);
+            });
             window.clearInterval(this.expirationTimer);
             this.queryQuestionDesc();
         });

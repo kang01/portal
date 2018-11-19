@@ -261,3 +261,12 @@ ui bootstrap tweaks
 .card{
     margin-bottom: 10px;
 }
+.descHtml table tr td{
+    border:1px solid #ccc;
+}
+.descHtml{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #eee;
+    padding: 8px;
+}

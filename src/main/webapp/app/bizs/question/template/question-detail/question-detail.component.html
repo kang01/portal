@@ -10,10 +10,10 @@
         <span class="f-w">问题概述</span>：
         <br> {{questionDetail.questionSummary}}
     </p>
-    <p>
+    <div>
         <span class="f-w">问题详情</span>：
-        <br> {{questionDetail.questionDescription}}
-    </p>
+        <pre class="descHtml">{{descHtml}}</pre>
+    </div>
     <p *ngIf="!statusFlag">
         <span class="f-w">问题回复</span>：{{questionDetail.replyContent}}
     </p>
