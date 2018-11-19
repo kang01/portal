@@ -22,7 +22,7 @@
         <button class="btn btn-sm btn-secondary " (click)="increaseTime()">申请加时</button>
     </div>
     <!--2302:其他问题 2303:IT技术问题-->
-    <form [hidden] ="questionDetail.questionTypeCode !== '2302' && questionDetail.questionTypeCode !== '2303'">
+    <form [hidden] ="questionDetail.questionTypeCode !== '2302' && questionDetail.questionTypeCode !== '2303'" *ngIf="statusFlag">
         <hr>
         <div class="form-group">
             <label class="f-w">问题回复</label>
